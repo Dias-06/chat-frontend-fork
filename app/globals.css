@@ -1,1 +1,35 @@
+@theme {
+  /*
+  * ОСНОВНЫЕ ЦВЕТА (Text & Base)
+  */
+  --color-white: #FFFFFF;
+  --color-black: #1C1C1E; /* Основной цвет текста */
+ 
+  /*
+  * АКЦЕНТНЫЕ ЦВЕТА (Primary)
+  * В v4 мы определяем оттенки явно, чтобы получить классы типа bg-primary или bg-primary-dark
+  */
+  --color-primary: #7763E4;      /* Акцентный (фиолетовый), соответствует DEFAULT */
+  --color-primary-dark: #615AA3; /* Акцентный темный (для ховера) */
+ 
+  /*
+  * ВТОРОСТЕПЕННЫЙ АКЦЕНТ (Secondary Teal)
+  */
+  --color-secondary: #27C840; /* Бирюзовый акцент */
+ 
+  /* * СЕРЫЕ ЦВЕТА (Gray)
+  */
+  --color-gray: #747474;    /* Текст серый, соответствует DEFAULT */
+  --color-gray-light: #F5F6F8; /* Main / Gray light (для фона) */
+  --color-gray-dark: #EEEEEE;  /* Gray Tone / Gray (для фона) */
+ 
+  /* * СИСТЕМНЫЕ И СПЕЦИАЛЬНЫЕ
+  */
+  --color-error: #FF0000; /* System/Red (для ошибок) */
+ 
+  /* * ОВЕРЛЕЙ */
+  --color-overlay: #3537F5;   /* Чистый цвет оверлея, прозрачность (40%)  (соответствует DEFAULT) */
+  --color-overlay-dark: #1C1C1E; /* Прозрачность (96%) */
+}
+
 @import 'tailwindcss';

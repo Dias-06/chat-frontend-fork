@@ -6,9 +6,9 @@ import { Success } from './ui/icons/Success';
 export default function FinishPage() {
   return (
     <main className="bg-[url('/Background.png')] bg-cover bg-center h-screen w-full grid">
-      <section className='m-8 px-4 pt-6 pb-10 bg-(--color-white) rounded-lg flex flex-col gap-5'>
-        <Success className='mt-[100px] self-center' />
-        <header className='mb-8 flex flex-col gap-3'>
+      <section className='m-8 px-4 pt-6 pb-10 bg-(--color-white) rounded-lg flex flex-col gap-8'>
+        <header className='mt-[100px] flex flex-col gap-3'>
+          <Success className='self-center' />
           <h1 className='font-medium text-2xl leading-[1.2] text-center align-middle text-(--color-black)'>
             Поздравляем!
           </h1>

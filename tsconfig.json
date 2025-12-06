@@ -29,7 +29,7 @@
       "@ui/*": ["src/shared/ui/*"],
       "@lib/*": ["src/shared/lib/*"],
       "@config/*": ["src/shared/config/*"],
-      "@assets/*": ["src/shared/assets/*"]
+      "@icons/*": ["src/shared/assets/icons/*"]
     }
   },
   "include": [

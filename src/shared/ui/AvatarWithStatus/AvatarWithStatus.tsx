@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 
+// Обновленный тип: удален "avatarWithStatusBelow"
 export type UserAvatarVariant =
-  | "avatarOnly" // только круглая картинка, без статуса
-  | "avatarWithStatusBelow" // аватар сверху, статус снизу
+  | "avatarOnly" // только круглая картинка, без статуса (теперь по умолчанию)
   | "avatarWithStatusRight"; // аватар слева, статус справа
 
 type AvatarProps = {
@@ -82,7 +82,7 @@ export function UserAvatar({
   avatar,
   status,
   size = 10,
-  variant = "avatarWithStatusBelow",
+  variant = "avatarOnly", // <-- Изменено значение по умолчанию
   showStatus = true,
   hideAvatar = false,
   isConnecting = false,
@@ -106,7 +106,7 @@ export function UserAvatar({
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">
+        <div className="flex h-full w-full items-center justify-center text-sm --color-gray">
           ?
         </div>
       )}
@@ -118,19 +118,17 @@ export function UserAvatar({
       <span
         className={
           isConnecting
-            ? "text-sm text-blue-500"
+            ? "text-sm --color-grey"
             : status?.is_online
-              ? "text-sm text-violet-600"
-              : "text-sm text-slate-400"
+              ? "text-sm --color-primary" 
+              : "text-sm --color-gray"
         }
+        // Используем инлайн-стиль для примера, если цвет задан через CSS-переменную :root
+        style={status?.is_online ? { color: 'var(--color-primary, #7763E4)' } : undefined}
       >
         {statusText}
       </span>
     ) : null;
-
-  if (variant === "avatarOnly") {
-    return <div className="inline-flex">{avatarElement}</div>;
-  }
 
   // Обработка варианта "avatarWithStatusRight"
   if (variant === "avatarWithStatusRight") {
@@ -145,17 +143,7 @@ export function UserAvatar({
       </div>
     );
   }
-
-  // Если аватар скрыт, показываем только статус (для варианта avatarWithStatusBelow по умолчанию)
-  if (hideAvatar) {
-    return <div className="inline-flex">{statusElement}</div>;
-  }
-
-  // Вариант по умолчанию: avatarWithStatusBelow (вертикальное расположение)
-  return (
-    <div className="inline-flex flex-col items-center gap-1">
-      {avatarElement}
-      {statusElement}
-    </div>
-  );
+  
+  // Вариант по умолчанию: avatarOnly
+  return <div className="inline-flex">{avatarElement}</div>;
 }

@@ -106,7 +106,7 @@ export function UserAvatar({
           className="h-full w-full object-cover"
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center text-sm --color-gray">
+        <div className="flex h-full w-full items-center justify-center text-sm text-gray">
           ?
         </div>
       )}
@@ -118,13 +118,13 @@ export function UserAvatar({
       <span
         className={
           isConnecting
-            ? "text-sm --color-grey"
+            ? "text-sm text-gray"
             : status?.is_online
-              ? "text-sm --color-primary" 
-              : "text-sm --color-gray"
+              ? "text-sm text-primary" 
+              : "text-sm text-gray"
         }
         // Используем инлайн-стиль для примера, если цвет задан через CSS-переменную :root
-        style={status?.is_online ? { color: 'var(--color-primary, #7763E4)' } : undefined}
+        style={status?.is_online ? { color: 'text-primary' } : undefined}
       >
         {statusText}
       </span>

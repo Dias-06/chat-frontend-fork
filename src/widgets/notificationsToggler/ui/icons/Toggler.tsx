@@ -1,0 +1,27 @@
+export const TogglerIcon = ({ active }: TogglerIconProps) => {
+  return (
+    <svg
+      width="60"
+      height="48"
+      viewBox="0 0 60 48"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <rect
+        y="8"
+        width="52"
+        height="32"
+        rx="16"
+        fill={active ? "#7769E1" : "#E4E4E4"}
+      />
+      <rect
+        x={active ? 24 : 4}
+        y="12"
+        width="24"
+        height="24"
+        rx="12"
+        fill="white"
+      />
+    </svg>
+  );
+};

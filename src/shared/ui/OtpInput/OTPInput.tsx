@@ -1,123 +1,140 @@
-import React, { useRef, useCallback, useMemo, useState } from "react";
+import React, {
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
+import { useId } from "react";
 
 interface OtpInputProps {
   length?: number;
-  value: string;
-  onChange: (otp: string) => void;
-  isError?: boolean;
-  containerClassName?: string;
+  correctCode: string;
+  id?: string;
 }
 
-const OtpInput: React.FC<OtpInputProps> = ({
-  length = 5,
-  value,
-  onChange,
-  isError = false,
-  containerClassName = "",
-}) => {
+const MAX_ATTEMPTS = 5;
+
+const OtpInput: React.FC<OtpInputProps> = ({ length = 5, correctCode, id }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const reactId = useId();
+  const safeId = id ?? `otp-${reactId}`;
+
+  const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleFocus = useCallback(() => {
-    setIsFocused(true);
-  }, []);
-
-  const handleBlur = useCallback(() => {
-    setIsFocused(false);
-  }, []);
+  const [attemptsLeft, setAttemptsLeft] = useState(MAX_ATTEMPTS);
+  const [isLocked, setIsLocked] = useState(false);
+  const [error, setError] = useState(false);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newValue = e.target.value.replace(/\D/g, "");
-      const trimmedValue = newValue.slice(0, length);
-      onChange(trimmedValue);
+      if (isLocked) return;
+
+      const digits = e.target.value.replace(/\D/g, "");
+      setValue(digits.slice(0, length));
     },
-    [length, onChange]
+    [isLocked, length]
   );
 
-  const handleContainerClick = useCallback(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
+  const focusInput = useCallback(() => {
+    if (!isLocked) inputRef.current?.focus();
+  }, [isLocked]);
+
+  const checkCode = useCallback(() => {
+    if (value.length !== length || isLocked) return;
+
+    if (value === correctCode) {
+      setError(false);
+      return;
     }
-  }, []);
 
-  const baseCellStyle = useMemo(
-    () => `
-      flex flex-1 items-center justify-center 
-      w-[60px] h-[60px] max-w-[60px] 
-      text-[18px] font-bold text-black
-      rounded-lg border-2 transition-colors duration-200
-      bg-white
-    `,
-    []
-  );
+    setError(true);
 
-  const getCellClasses = useCallback(
-    (index: number, isActive: boolean) => {
-      let classes = baseCellStyle;
-
-      if (isError) {
-        classes += " border-error text-black";
-      } else if (isActive) {
-        classes += " border-primary border-2";
-      } else {
-        classes += " border-primary";
+    setAttemptsLeft((prev) => {
+      const next = prev - 1;
+      if (next <= 0) {
+        setIsLocked(true);
       }
+      return next;
+    });
 
-      return classes;
-    },
-    [baseCellStyle, isError]
-  );
+    setValue("");
+  }, [value, length, correctCode, isLocked]);
+
+  useEffect(() => {
+    if (value.length === length) checkCode();
+  }, [value, checkCode, length]);
+
+  const baseCellStyle = `
+    flex flex-1 items-center justify-center
+    w-[60px] h-[60px]
+    text-[18px] rounded-lg text-black
+    bg-transparent transition-colors
+  `;
+
+  const getCellClasses = (isActive: boolean) => {
+    if (isLocked) return `${baseCellStyle} border border-gray-dark`;
+    if (error) return `${baseCellStyle} border-2 border-error`;
+    if (isActive && isFocused)
+      return `${baseCellStyle} border-2 border-primary`;
+    return `${baseCellStyle} border border-primary`;
+  };
 
   const cells = useMemo(() => {
-    const otpArray = value.padEnd(length, " ").split("");
+    const padded = value.padEnd(length, " ").split("");
+    const activeIndex = isLocked ? -1 : value.length;
 
-    const activeIndex = value.length < length ? value.length : -1;
-
-    return otpArray.map((digit, index) => {
-      const isActive = index === activeIndex;
-      const cellClasses = getCellClasses(index, isActive);
+    return padded.map((char, i) => {
+      const isActive = i === activeIndex;
 
       return (
-        <div key={index} className={`relative ${cellClasses}`}>
-          {digit !== " " ? (
-            digit
-          ) : isActive && isFocused ? (
+        <div key={i} className={`relative ${getCellClasses(isActive)}`}>
+          {char !== " " ? (
+            char
+          ) : isActive && isFocused && !isLocked ? (
             <span
               className="absolute w-px bg-black h-1/2 animate-blink"
-              style={{
-                left: "50%",
-                transform: "translateX(-50%)",
-              }}
+              style={{ left: "50%", transform: "translateX(-50%)" }}
             />
           ) : null}
         </div>
       );
     });
-  }, [length, value, getCellClasses, isFocused]);
+  }, [value, length, isFocused, error, isLocked]);
 
   return (
-    <div
-      className={`relative ${containerClassName}`}
-      onClick={handleContainerClick}
-    >
-      <input
-        ref={inputRef}
-        type="text"
-        value={value}
-        onChange={handleChange}
-        maxLength={length}
-        // inputMode="numeric" и pattern для вызова цифровой клавиатуры на мобильных
-        inputMode="numeric"
-        pattern="[0-9]*"
-        autoComplete="one-time-code"
-        className="absolute inset-0 z-10 w-full h-full opacity-0 cursor-default"
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-      />
+    <div className="space-y-1">
+      {error && !isLocked && (
+        <label htmlFor={id} className="text-error text-[14px] leading-[1.2]">
+          {`Код введён неверно. Осталось ${attemptsLeft} попытки`}
+        </label>
+      )}
 
-      <div className="flex flex-wrap justify-between gap-2 md:gap-4">
-        {cells}
+      {isLocked && (
+        <label htmlFor={id} className="text-error text-[14px] leading-[1.2]">
+          Слишком много неверных попыток.
+        </label>
+      )}
+
+      <div className="relative cursor-pointer" onClick={focusInput}>
+        <input
+          ref={inputRef}
+          id={safeId}
+          type="text"
+          value={value}
+          onChange={handleChange}
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={length}
+          autoComplete="one-time-code"
+          disabled={isLocked}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          className="absolute inset-0 w-full h-full opacity-0"
+        />
+
+        <div className="flex justify-between gap-[7px]">{cells}</div>
       </div>
     </div>
   );

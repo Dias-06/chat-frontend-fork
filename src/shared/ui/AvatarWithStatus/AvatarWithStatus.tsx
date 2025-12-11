@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 
-// Обновленный тип: удален "avatarWithStatusBelow"
 export type UserAvatarVariant =
   | "avatarOnly" // только круглая картинка, без статуса (теперь по умолчанию)
   | "avatarWithStatusRight"; // аватар слева, статус справа
@@ -19,8 +18,8 @@ type AvatarProps = {
 type StatusProps = {
   /** Пользователь онлайн */
   is_online?: boolean;
-  /** Время последнего визита (UNIX timestamp в секундах) */
-  was_online_at?: number;
+  /** Время последнего визита (UNIX timestamp в секундах). Теперь может быть undefined. */
+  was_online_at?: number | undefined; 
 };
 
 type UserAvatarProps = {
@@ -50,7 +49,7 @@ function pickAvatarUrl(avatar: AvatarProps): string {
   );
 }
 
-function formatLastSeen(timestamp: number): string {
+function formatLastSeen(timestamp: number | undefined): string  {
   if (!timestamp) return "недавно";
 
   const date = new Date(timestamp * 1000); // UNIX‑секунды
@@ -75,14 +74,15 @@ function getStatusText(status: StatusProps | undefined, isConnecting?: boolean):
   if (isConnecting) return "соединение...";
   if (!status) return "";
   if (status.is_online) return "в сети";
-  return formatLastSeen(status.was_online_at || 0);
+  // was_online_at теперь имеет тип number | undefined, что безопасно передавать
+  return formatLastSeen(status.was_online_at);
 }
 
 export function UserAvatar({
   avatar,
   status,
   size = 10,
-  variant = "avatarOnly", // <-- Изменено значение по умолчанию
+  variant = "avatarOnly", 
   showStatus = true,
   hideAvatar = false,
   isConnecting = false,
@@ -96,7 +96,7 @@ export function UserAvatar({
 
   const avatarElement = hideAvatar ? null : (
     <div
-      className="overflow-hidden rounded-full bg-slate-200"
+      className="overflow-hidden rounded-full bg-gray"
       style={{ width: dimension, height: dimension }}
     >
       {src ? (
@@ -123,8 +123,6 @@ export function UserAvatar({
               ? "text-sm text-primary" 
               : "text-sm text-gray"
         }
-        // Используем инлайн-стиль для примера, если цвет задан через CSS-переменную :root
-        style={status?.is_online ? { color: 'text-primary' } : undefined}
       >
         {statusText}
       </span>
@@ -137,7 +135,7 @@ export function UserAvatar({
       return <div className="inline-flex">{statusElement}</div>;
     }
     return (
-      <div className="flex items-end gap-3">
+      <div className="flex items-center gap-3">
         {avatarElement}
         {statusElement}
       </div>

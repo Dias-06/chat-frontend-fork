@@ -32,6 +32,8 @@
   /* * ОВЕРЛЕЙ */
   --color-overlay: #3537F5;   /* Чистый цвет оверлея, прозрачность (40%)  (соответствует DEFAULT) */
   --color-overlay-dark: #1C1C1E; /* Прозрачность (96%) */
+  /* Шрифт Roboto */
+  --font-sans: var(--font-roboto), sans-serif;
 }
 
 @keyframes blink {
@@ -46,5 +48,7 @@
 .animate-blink {
     animation: blink 1s step-end infinite;
 }
-
+body{
+    font-family: var(--font-sans);
+}
 @import "tailwindcss"

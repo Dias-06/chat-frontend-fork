@@ -8,7 +8,7 @@ export const MsgBubble = () => {
   ];
 
   return (
-    <div className="flex gap-3">
+    <div className="flex">
       <div className="p-2 h-screen overflow-scroll flex flex-col gap-4">
         <h2 className="text-xl text-white">Small messages</h2>
 

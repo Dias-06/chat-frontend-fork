@@ -1,3 +1,4 @@
+
 @theme {
   /*
   * ОСНОВНЫЕ ЦВЕТА (Text & Base)
@@ -11,6 +12,7 @@
   */
   --color-primary: #7763E4;      /* Акцентный (фиолетовый), соответствует DEFAULT */
   --color-primary-dark: #615AA3; /* Акцентный темный (для ховера) */
+  --color-violate-light: rgba(239, 238, 247, 1);
  
   /*
   * ВТОРОСТЕПЕННЫЙ АКЦЕНТ (Secondary Teal)
@@ -26,11 +28,30 @@
   /* * СИСТЕМНЫЕ И СПЕЦИАЛЬНЫЕ
   */
   --color-error: #FF0000; /* System/Red (для ошибок) */
+  --color-btn-disabled: #E4E4E4; /* Для неактивной кнопки*/
  
   /* * ОВЕРЛЕЙ */
-  --color-overlay: #3537F5;   /* Чистый цвет оверлея, прозрачность (40%)  (соответствует DEFAULT) */
+  --color-overlay: #9587F566;
   --color-overlay-dark: #1C1C1E; /* Прозрачность (96%) */
+
+  /* Шрифт Roboto */
+  --font-sans: var(--font-roboto), sans-serif;
+ 
+  /* Gadient*/
+    --background-image-gradient-main: linear-gradient(
+        to bottom,
+        #E2EAFE, 
+        #DCF0EE
+    );
+
+   --background-image-gradient-text: linear-gradient(
+        to bottom,
+        #D7D7D7 0%,
+        #FFF9F9 10%,
+        #4F4C4C 100%
+  );
 }
+
 
 @keyframes blink {
     0%, 100% {
@@ -44,5 +65,7 @@
 .animate-blink {
     animation: blink 1s step-end infinite;
 }
-
+body{
+    font-family: var(--font-sans);
+}
 @import "tailwindcss"

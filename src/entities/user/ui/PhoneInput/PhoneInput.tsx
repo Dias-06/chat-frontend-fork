@@ -1,18 +1,22 @@
-import React, { useState, useCallback, ReactNode } from "react";
-import Input from "../../../../shared/ui/Input/Input";
+import React, {
+  useState,
+  useCallback,
+  useId,
+  InputHTMLAttributes,
+} from "react";
 
-interface PhoneInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
+interface PhoneInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
   error?: string;
-  startIcon?: ReactNode;
-  endIcon?: ReactNode;
+  id?: string;
+  height?: string;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 const formatPhoneNumber = (value: string): string => {
   if (!value) return "";
 
   const rawValue = value.replace(/[^\d]/g, "");
-
   const limit = 11;
   const digits = rawValue.substring(0, limit);
 
@@ -28,38 +32,40 @@ const formatPhoneNumber = (value: string): string => {
 
   formattedValue += ` (${digits.substring(1, 4)}`;
 
-  if (digits.length >= 5) {
-    formattedValue += `) ${digits.substring(4, 7)}`;
-  }
-  if (digits.length >= 8) {
-    formattedValue += `-${digits.substring(7, 9)}`;
-  }
-  if (digits.length >= 10) {
-    formattedValue += `-${digits.substring(9, 11)}`;
-  }
+  if (digits.length >= 5) formattedValue += `) ${digits.substring(4, 7)}`;
+  if (digits.length >= 8) formattedValue += `-${digits.substring(7, 9)}`;
+  if (digits.length >= 10) formattedValue += `-${digits.substring(9, 11)}`;
 
   return formattedValue;
 };
 
 const PhoneInput: React.FC<PhoneInputProps> = ({
-  label,
+  label = "Введите номер телефона",
   error: customError,
   value,
+  defaultValue = "",
+  id,
+  height = "60px",
+  className,
+  inputRef,
   onChange,
   onBlur,
-  ...rest
+  ...props
 }) => {
+  const generatedId = useId();
+  const finalId = id || generatedId;
+
   const [internalValue, setInternalValue] = useState(
-    formatPhoneNumber((value as string) || "")
+    formatPhoneNumber(String(defaultValue))
   );
 
   const displayValue =
-    value !== undefined ? formatPhoneNumber(value as string) : internalValue;
+    value !== undefined ? formatPhoneNumber(String(value)) : internalValue;
 
-  const handleInputChange = useCallback(
+  const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const rawInput = e.target.value;
-      const formatted = formatPhoneNumber(rawInput);
+      const raw = e.target.value;
+      const formatted = formatPhoneNumber(raw);
 
       if (value === undefined) {
         setInternalValue(formatted);
@@ -75,27 +81,41 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
 
   const handleBlur = useCallback(
     (e: React.FocusEvent<HTMLInputElement>) => {
-      if (onBlur) onBlur(e);
+      onBlur?.(e);
     },
     [onBlur]
   );
 
-  const shouldShowErrorStyles = !!customError;
-  const finalErrorText = customError;
+  const inputBorder = customError
+    ? "border-2 border-error"
+    : "border border-gray focus:border-primary focus:border-2";
 
   return (
-    <Input
-      label={label}
-      isError={shouldShowErrorStyles}
-      error={finalErrorText}
-      value={displayValue}
-      onChange={handleInputChange}
-      onBlur={handleBlur}
-      type="tel"
-      placeholder="+7 (900) 000-00-00"
-      className="text-lg"
-      {...rest}
-    />
+    <div className="w-full">
+      <label
+        htmlFor={finalId}
+        className={`block mb-1 text-sm ${
+          customError ? "text-error" : "text-gray"
+        }`}
+      >
+        {customError || label}
+      </label>
+
+      <div className="relative flex items-center">
+        <input
+          id={finalId}
+          value={displayValue}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          ref={inputRef || undefined}
+          placeholder="+7 (900) 000-00-00"
+          className={`w-full bg-white px-4 rounded-lg text-lg transition-colors duration-200 outline-none ${inputBorder} ${className}`}
+          style={{ height }}
+          type="tel"
+          {...props}
+        />
+      </div>
+    </div>
   );
 };
 

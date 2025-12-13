@@ -1,57 +1,59 @@
-import React, { forwardRef, TextareaHTMLAttributes, ReactNode } from "react";
-// Предполагаем, что FieldWrapper находится в том же shared/ui каталоге
-import { FieldWrapper } from "../FieldWrapper/FieldWrapper";
+import React, { TextareaHTMLAttributes } from "react";
+import { useId } from "react";
 
-// Интерфейс TextareaProps: только пропсы для <textarea>
 interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
-  // Пропсы, которые обрабатывает FieldWrapper:
   label?: string;
+  id?: string;
   error?: string;
   isError?: boolean;
-  className?: string; // Для стилей, специфичных для пользователя
-
-  // Здесь НЕТ startIcon / endIcon, так как они редко используются в textarea!
+  className?: string;
+  heightVariant?: "login" | "default"; // login = 219px, default = 150px
 }
 
-const baseStyles =
-  // p-3 для padding внутри поля, resize-y для вертикального изменения размера
-  "w-full placeholder-gray py-3 border rounded-lg transition-colors duration-200 outline-none p-3 resize-y relative z-0";
+const Textarea: React.FC<TextareaProps> = ({
+  label,
+  error,
+  id,
+  isError = false,
+  className = "",
+  heightVariant = "login",
+  ...rest
+}) => {
+  const generatedId = useId();
+  const textareaId = id || generatedId;
 
-const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  (props, ref) => {
-    const { label, error, isError = false, className = "", ...rest } = props;
+  const height = heightVariant === "login" ? "219px" : "150px";
 
-    // --- Внутренняя логика стилей ---
+  const borderStyle = isError
+    ? "border-2 border-error"
+    : "border border-gray focus:border-primary focus:border-2";
 
-    // Стили состояния
-    const stateStyles = isError
-      ? "border-error border-2"
-      : "border-gray focus:border-primary focus:border-2";
+  const textareaClasses = `
+    w-full bg-white p-4 rounded-lg resize-y transition-colors duration-200 outline-none
+    ${borderStyle} ${className}
+  `;
 
-    // Для Textarea иконки не используются, поэтому отступы внутри поля по умолчанию
-    const iconSpacingClasses = "pl-3 pr-3";
+  return (
+    <div className="w-full">
+      {label && (
+        <label
+          htmlFor={textareaId}
+          className={`block mb-1 text-sm ${
+            isError ? "text-error" : "text-gray"
+          }`}
+        >
+          {error || label}
+        </label>
+      )}
 
-    // --- Рендеринг ---
+      <textarea
+        id={textareaId}
+        className={textareaClasses}
+        style={{ height }}
+        {...rest}
+      />
+    </div>
+  );
+};
 
-    return (
-      <FieldWrapper
-        label={label}
-        error={error}
-        isError={isError}
-        // Иконки НЕ передаются в FieldWrapper
-        iconSpacingClasses={iconSpacingClasses}
-      >
-        <textarea
-          ref={ref}
-          // Объединяем внутренние стили
-          className={`${baseStyles} ${stateStyles} ${className}`}
-          rows={5} // Дефолтное количество строк
-          {...rest}
-        />
-      </FieldWrapper>
-    );
-  }
-);
-
-Textarea.displayName = "Textarea";
 export default Textarea;

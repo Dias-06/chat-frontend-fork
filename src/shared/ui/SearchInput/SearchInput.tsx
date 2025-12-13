@@ -15,7 +15,7 @@ const getThemeClasses = (theme: SearchTheme = "light"): string => {
     case "gray":
       return "bg-gray-light text-black placeholder-gray rounded-[16px] border-none py-[10px] leading-[24px]";
     case "dark":
-      return "bg-violate-light text-black placeholder-gray rounded-[16px] border-none py-[10px] leading-[24px]";
+      return "bg-violet-secondary text-black placeholder-gray rounded-[16px] border-none py-[10px] leading-[24px]";
     default:
       return "bg-white text-black placeholder-gray rounded-[16px] border-none py-[10px] leading-[24px]";
   }

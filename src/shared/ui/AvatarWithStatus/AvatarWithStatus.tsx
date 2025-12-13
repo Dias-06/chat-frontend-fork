@@ -37,6 +37,8 @@ type UserAvatarProps = {
   hideAvatar?: boolean;
   /** Состояние соединения. Если true, показывается "соединяемся". */
   isConnecting?: boolean;
+  /** Дополнительные классы для текста статуса (переопределяет стандартные цвета) */
+  statusTextClassName?: string;
 };
 
 function pickAvatarUrl(avatar: AvatarProps): string {
@@ -86,6 +88,7 @@ export function UserAvatar({
   showStatus = true,
   hideAvatar = false,
   isConnecting = false,
+  statusTextClassName,
 }: UserAvatarProps) {
   const src = pickAvatarUrl(avatar);
   const px = size * 4;
@@ -117,11 +120,12 @@ export function UserAvatar({
     shouldShowStatus && statusText ? (
       <span
         className={
-          isConnecting
+          statusTextClassName ||
+          (isConnecting
             ? "text-sm text-gray"
             : status?.is_online
               ? "text-sm text-primary" 
-              : "text-sm text-gray"
+              : "text-sm text-gray")
         }
       >
         {statusText}

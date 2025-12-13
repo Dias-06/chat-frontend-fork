@@ -9,7 +9,8 @@ interface PhoneInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   id?: string;
-  height?: string; // e.g. "60px"
+  height?: string;
+  inputRef?: React.RefObject<HTMLInputElement | null>;
 }
 
 const formatPhoneNumber = (value: string): string => {
@@ -45,6 +46,8 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
   defaultValue = "",
   id,
   height = "60px",
+  className,
+  inputRef,
   onChange,
   onBlur,
   ...props
@@ -69,7 +72,7 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
       }
 
       if (onChange) {
-        e.target.value = formatted; // pass formatted value
+        e.target.value = formatted;
         onChange(e);
       }
     },
@@ -104,8 +107,9 @@ const PhoneInput: React.FC<PhoneInputProps> = ({
           value={displayValue}
           onChange={handleChange}
           onBlur={handleBlur}
+          ref={inputRef || undefined}
           placeholder="+7 (900) 000-00-00"
-          className={`w-full bg-white px-4 rounded-lg text-lg transition-colors duration-200 outline-none ${inputBorder}`}
+          className={`w-full bg-white px-4 rounded-lg text-lg transition-colors duration-200 outline-none ${inputBorder} ${className}`}
           style={{ height }}
           type="tel"
           {...props}

@@ -12,7 +12,6 @@ interface OtpInputProps {
   correctCode: string;
   id?: string;
 }
-
 const MAX_ATTEMPTS = 5;
 
 const OtpInput: React.FC<OtpInputProps> = ({ length = 5, correctCode, id }) => {

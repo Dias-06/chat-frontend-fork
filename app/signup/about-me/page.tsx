@@ -22,7 +22,7 @@ export default function AboutMePage() {
   };
 
   return (
-    <main className="bg-[url('/Background.png')] bg-cover bg-center h-screen w-full grid">
+    <main className="bg-gradient-main h-screen w-full grid">
       <section className="m-8 px-4 pt-6 pb-10 bg-white rounded-lg flex flex-col gap-5">
         <nav className="flex items-center justify-between">
           <Link href="/">

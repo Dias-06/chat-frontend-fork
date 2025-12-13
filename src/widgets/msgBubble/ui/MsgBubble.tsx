@@ -1,4 +1,5 @@
 import { FileIcon } from "./icons/FileIcon";
+import { FileLoaderIcon } from "./icons/FileLoaderIcon";
 
 export const MsgBubble = () => {
   const images = [
@@ -19,8 +20,8 @@ export const MsgBubble = () => {
 
         <div className="h-fit max-w-73.25 w-fit px-3 py-2.5 flex gap-2 bg-white rounded-2xl rounded-bl-[4px]">
           <p className="leading-[1.3]">
-            Long message. Lorem ipsum is a dummy or placeholder text commonly
-            used in graphic design, publishing, and web development.
+            Long (more than one row) message. Lorem ipsum is a dummy or
+            placeholder text.
           </p>
           <p className="text-sm text-gray leading-[1.2] self-end">11:52</p>
         </div>
@@ -46,6 +47,40 @@ export const MsgBubble = () => {
             <div className="flex flex-col gap-0.5">
               <p className="max-w-52.25 leading-[1.3] truncate">
                 DummyTextGoesHereToMakeFilenameLong.pdf
+              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray leading-[1.2]">5.2 МБ</p>
+                <p className="text-sm text-gray leading-[1.2]">11:52</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-73.25 w-fit h-fit px-3 py-2.5 flex gap-1.5 bg-white rounded-2xl rounded-bl-[4px]">
+          <div className="flex items-center gap-3">
+            <FileLoaderIcon />
+            <div className="flex flex-col gap-0.5">
+              <p className="max-w-52.25 leading-[1.3] truncate">
+                LoadingFile.pdf
+              </p>
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray leading-[1.2]">5.2 МБ</p>
+                <p className="text-sm text-gray leading-[1.2]">11:52</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-73.25 w-fit h-fit px-3 py-2.5 flex gap-1.5 bg-white rounded-2xl rounded-bl-[4px]">
+          <div className="flex items-center gap-3">
+            <img
+              src={images[0]}
+              alt="preview"
+              className="rounded w-12 h-12 object-cover"
+            />
+            <div className="flex flex-col gap-0.5">
+              <p className="max-w-52.25 leading-[1.3] truncate">
+                IMG_12132025.png
               </p>
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray leading-[1.2]">5.2 МБ</p>

@@ -184,7 +184,7 @@ export const MsgBubble = () => {
         </div>
 
         <div className="h-fit max-w-57 relative">
-          <div className="rounded-2xl grid grid-cols-2 gap-0.5 overflow-hidden">
+          <div className="rounded-2xl rounded-bl-[4px] grid grid-cols-2 gap-0.5 overflow-hidden">
             {images.map((img, i) => {
               const isLastOdd =
                 i === images.length - 1 && images.length % 2 !== 0;

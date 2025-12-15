@@ -1,7 +1,6 @@
 // src/widgets/InviteContactItem/ui/InviteContactItem.tsx
 "use client";
 import React from "react";
-// Используем оригинальный путь импорта из вашего кода
 import { UserAvatar } from "@/shared/ui/AvatarWithStatus/AvatarWithStatus"; 
 
 type InviteContactItemProps = {
@@ -65,10 +64,10 @@ export const InviteContactItem: React.FC<InviteContactItemProps> = ({
 
       {/* Круглый чекбокс */}
       <div
-        className={`relative w-6 h-6 rounded-full border-1 flex items-center justify-center transition-all duration-200 shrink-0 ${
+        className={`relative w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-200 shrink-0 ${
           isSelected 
             ? 'bg-white border-white'
-            : 'bg-white border-gray-primary'
+            : 'bg-white border-primary'
         }`}
       >
         {/* SVG иконка галочки */}
@@ -78,7 +77,7 @@ export const InviteContactItem: React.FC<InviteContactItemProps> = ({
                 ? 'text-primary'
                 : 'text-white'
           }`} 
-          xmlns="www.w3.org" 
+          xmlns="www.w3.org/2000.svg" 
           fill="none" 
           viewBox="0 0 24 24" 
           stroke="currentColor"
@@ -91,7 +90,7 @@ export const InviteContactItem: React.FC<InviteContactItemProps> = ({
       {/* Абсолютно позиционированный разделитель с точными отступами и условием isSelected */}
       {showDivider && !isSelected && (
         <div 
-          className={`absolute bottom-0 left-[4.25rem] right-[1rem] h-px bg-gray-200`} 
+          className={`absolute bottom-0 left-[4.25rem] right-[1rem] h-px bg-gray-light`} 
         />
       )}
     </li>

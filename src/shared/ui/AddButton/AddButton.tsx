@@ -4,7 +4,7 @@ interface ButtonProps{
   onclick?: () => void,
   disabled?: boolean,
   full?: boolean,
-  children: ReactNode,
+  children?: ReactNode,
   size: 'lg' | 'md' | 'sm'
 } 
 const AddButton = (props:ButtonProps) => {

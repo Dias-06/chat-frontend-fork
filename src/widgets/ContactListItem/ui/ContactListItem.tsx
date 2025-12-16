@@ -62,7 +62,7 @@ export const InviteContactItem: React.FC<ContactItemProps> = ({
       {showCheckbox && (
         <div
           // Стили чекбокса
-          className={`relative w-6 h-6 rounded-full border-1 flex items-center justify-center ${
+          className={`relative w-6 h-6 rounded-full border flex items-center justify-center ${
             isSelected 
               ? 'bg-primary border-primary' // Выбран: заполненный фон
               : 'bg-white border-primary' // Не выбран: пустой фон,
@@ -76,7 +76,7 @@ export const InviteContactItem: React.FC<ContactItemProps> = ({
                 ? 'text-white opacity-100' // Видимая белая галочка
                 : 'text-white opacity-0' // Скрытая галочка
             }`} 
-            xmlns="www.w3.org" 
+            xmlns="http://www.w3.org/2000/svg" 
             fill="none" 
             viewBox="0 0 24 24" 
             stroke="currentColor"

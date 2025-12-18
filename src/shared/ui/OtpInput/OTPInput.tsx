@@ -11,10 +11,19 @@ interface OtpInputProps {
   length?: number;
   correctCode: string;
   id?: string;
+  onError?: () => void;
+  onSuccess?: () => void;
 }
+
 const MAX_ATTEMPTS = 5;
 
-const OtpInput: React.FC<OtpInputProps> = ({ length = 5, correctCode, id }) => {
+const OtpInput: React.FC<OtpInputProps> = ({
+  length = 5,
+  correctCode,
+  id,
+  onError,
+  onSuccess,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const reactId = useId();
   const safeId = id ?? `otp-${reactId}`;
@@ -45,10 +54,13 @@ const OtpInput: React.FC<OtpInputProps> = ({ length = 5, correctCode, id }) => {
 
     if (value === correctCode) {
       setError(false);
+      onSuccess?.();
       return;
     }
 
     setError(true);
+
+    onError?.();
 
     setAttemptsLeft((prev) => {
       const next = prev - 1;
@@ -59,7 +71,7 @@ const OtpInput: React.FC<OtpInputProps> = ({ length = 5, correctCode, id }) => {
     });
 
     setValue("");
-  }, [value, length, correctCode, isLocked]);
+  }, [value, length, correctCode, isLocked, onError, onSuccess]);
 
   useEffect(() => {
     if (value.length === length) checkCode();
@@ -67,7 +79,7 @@ const OtpInput: React.FC<OtpInputProps> = ({ length = 5, correctCode, id }) => {
 
   const baseCellStyle = `
     flex flex-1 items-center justify-center
-    w-[60px] h-[60px]
+    max-w-[60px] w-full h-[60px]
     text-[18px] rounded-lg text-black
     bg-transparent transition-colors
   `;

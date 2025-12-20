@@ -9,20 +9,20 @@ import { useId } from "react";
 
 interface OtpInputProps {
   length?: number;
-  correctCode: string;
   id?: string;
-  onError?: () => void;
-  onSuccess?: () => void;
+  disabled?: boolean;
+  error?: boolean;
+  errorText?: string | null;
+  onComplete: (code: string) => void;
 }
-
-const MAX_ATTEMPTS = 5;
 
 const OtpInput: React.FC<OtpInputProps> = ({
   length = 5,
-  correctCode,
   id,
-  onError,
-  onSuccess,
+  disabled = false,
+  error = false,
+  errorText,
+  onComplete,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const reactId = useId();
@@ -31,51 +31,52 @@ const OtpInput: React.FC<OtpInputProps> = ({
   const [value, setValue] = useState("");
   const [isFocused, setIsFocused] = useState(false);
 
-  const [attemptsLeft, setAttemptsLeft] = useState(MAX_ATTEMPTS);
-  const [isLocked, setIsLocked] = useState(false);
-  const [error, setError] = useState(false);
+  const prevErrorRef = useRef(false);
+
+  /* ================= handlers ================= */
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      if (isLocked) return;
+      if (disabled) return;
 
       const digits = e.target.value.replace(/\D/g, "");
       setValue(digits.slice(0, length));
     },
-    [isLocked, length]
+    [disabled, length]
   );
 
   const focusInput = useCallback(() => {
-    if (!isLocked) inputRef.current?.focus();
-  }, [isLocked]);
-
-  const checkCode = useCallback(() => {
-    if (value.length !== length || isLocked) return;
-
-    if (value === correctCode) {
-      setError(false);
-      onSuccess?.();
-      return;
+    if (!disabled) {
+      inputRef.current?.focus();
     }
+  }, [disabled]);
 
-    setError(true);
+  /* ================= effects ================= */
 
-    onError?.();
-
-    setAttemptsLeft((prev) => {
-      const next = prev - 1;
-      if (next <= 0) {
-        setIsLocked(true);
-      }
-      return next;
-    });
-
-    setValue("");
-  }, [value, length, correctCode, isLocked, onError, onSuccess]);
+  // вызов onComplete только когда код полностью введён
+  const completedRef = useRef(false);
 
   useEffect(() => {
-    if (value.length === length) checkCode();
-  }, [value, checkCode, length]);
+    if (value.length === length && !disabled && !completedRef.current) {
+      completedRef.current = true;
+      onComplete(value);
+    }
+
+    if (value.length < length) {
+      completedRef.current = false;
+    }
+  }, [value, length, disabled, onComplete]);
+
+  // очистка при ошибке
+  useEffect(() => {
+    if (!prevErrorRef.current && error) {
+      setValue("");
+      inputRef.current?.focus(); // ← тут можно
+    }
+    prevErrorRef.current = error;
+  }, [error]);
+
+  /* ================= UI ================= */
 
   const baseCellStyle = `
     flex flex-1 items-center justify-center
@@ -85,7 +86,7 @@ const OtpInput: React.FC<OtpInputProps> = ({
   `;
 
   const getCellClasses = (isActive: boolean) => {
-    if (isLocked) return `${baseCellStyle} border border-gray-dark`;
+    if (disabled) return `${baseCellStyle} border border-gray-dark`;
     if (error) return `${baseCellStyle} border-2 border-error`;
     if (isActive && isFocused)
       return `${baseCellStyle} border-2 border-primary`;
@@ -94,7 +95,7 @@ const OtpInput: React.FC<OtpInputProps> = ({
 
   const cells = useMemo(() => {
     const padded = value.padEnd(length, " ").split("");
-    const activeIndex = isLocked ? -1 : value.length;
+    const activeIndex = disabled || value.length >= length ? -1 : value.length;
 
     return padded.map((char, i) => {
       const isActive = i === activeIndex;
@@ -103,7 +104,7 @@ const OtpInput: React.FC<OtpInputProps> = ({
         <div key={i} className={`relative ${getCellClasses(isActive)}`}>
           {char !== " " ? (
             char
-          ) : isActive && isFocused && !isLocked ? (
+          ) : isActive && isFocused && !disabled ? (
             <span
               className="absolute w-px bg-black h-1/2 animate-blink"
               style={{ left: "50%", transform: "translateX(-50%)" }}
@@ -112,22 +113,18 @@ const OtpInput: React.FC<OtpInputProps> = ({
         </div>
       );
     });
-  }, [value, length, isFocused, error, isLocked]);
+  }, [value, length, isFocused, error, disabled]);
 
   return (
     <div className="space-y-1">
-      {error && !isLocked && (
-        <label htmlFor={id} className="text-error text-[14px] leading-[1.2]">
-          {`Код введён неверно. Осталось ${attemptsLeft} попытки`}
+      {error && errorText && (
+        <label
+          htmlFor={safeId}
+          className="text-error text-[14px] leading-[1.2]"
+        >
+          {errorText}
         </label>
       )}
-
-      {isLocked && (
-        <label htmlFor={id} className="text-error text-[14px] leading-[1.2]">
-          Слишком много неверных попыток.
-        </label>
-      )}
-
       <div className="relative cursor-pointer" onClick={focusInput}>
         <input
           ref={inputRef}
@@ -139,7 +136,7 @@ const OtpInput: React.FC<OtpInputProps> = ({
           pattern="[0-9]*"
           maxLength={length}
           autoComplete="one-time-code"
-          disabled={isLocked}
+          disabled={disabled}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           className="absolute inset-0 w-full h-full opacity-0"

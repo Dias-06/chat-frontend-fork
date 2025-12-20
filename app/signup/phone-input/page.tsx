@@ -1,4 +1,5 @@
 "use client";
+import { sendLoginCode } from "@/shared/api/auth/auth.api";
 
 import { Logo } from "@/shared/assets/icons/Logo";
 import { PhoneInput } from "@/entities/user/ui/PhoneInput";
@@ -17,9 +18,28 @@ export default function PhonePage() {
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const handleCorrect = () => {
-    setIsConfirmOpen(false);
-    router.push("/signup/confirmation");
+  const normalizePhone = (phone: string) => {
+    const digits = phone.replace(/\D/g, "");
+    return digits ? `+${digits}` : "";
+  };
+
+  const handleCorrect = async () => {
+    try {
+      const normalizedPhone = normalizePhone(submittedNumber);
+
+      await sendLoginCode({
+        phone_number: normalizedPhone,
+        code_len: 5,
+      });
+
+      setIsConfirmOpen(false);
+
+      router.push(
+        `/signup/confirmation?phone=${encodeURIComponent(submittedNumber)}`
+      );
+    } catch (error) {
+      alert("Не удалось отправить код");
+    }
   };
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
@@ -28,7 +48,7 @@ export default function PhonePage() {
     setIsModalOpen(true);
     setIsConfirmOpen(true);
   };
-  const isPhoneValid = formData.phone_number.length === 18;
+  const isPhoneValid = formData.phone_number.replace(/\D/g, "").length === 11;
 
   return (
     <main className="relative bg-gradient-main h-screen w-full grid">
@@ -83,7 +103,8 @@ export default function PhonePage() {
           </div>
 
           <Button
-            variant={isPhoneValid ? "primary" : "disabled"}
+            variant="primary"
+            disabled={isPhoneValid ? false : true}
             full
             type="submit"
             size="lg"

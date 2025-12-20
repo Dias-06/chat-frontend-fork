@@ -9,6 +9,11 @@ import { ChevronLeft } from "./ui/icons/ChevronLeft";
 import { Button } from "@/shared/ui/Button";
 import { Logo } from "@icons/Logo";
 import { TextInput } from "@/entities/user/ui/TextInput";
+import {
+  updateMessengerProfile,
+  checkNicknameUnique,
+} from "@/shared/api/messenger";
+import { tokenStorage } from "@/shared/lib/tokenStorage";
 
 export default function AboutMePage() {
   const [formData, setFormData] = useState<Props>({
@@ -16,16 +21,64 @@ export default function AboutMePage() {
     username: "",
   });
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+  const [nicknameError, setNicknameError] = useState("");
+
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData);
+    setLoading(true);
+    setNicknameError("");
+
+    try {
+      let token = tokenStorage.getAccess();
+
+      if (!token) {
+        const refresh = tokenStorage.getRefresh();
+        if (!refresh) throw new Error("Необходима авторизация");
+
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login/refresh/token/`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ refresh }),
+          }
+        );
+
+        if (!res.ok) throw new Error("Не удалось обновить токен");
+
+        const data = await res.json();
+        tokenStorage.setTokens(data.access, data.refresh);
+        token = data.access;
+      }
+
+      try {
+        await checkNicknameUnique(formData.username, token!);
+      } catch (err: any) {
+        if (err.message.includes("уже занят")) {
+          setNicknameError(err.message);
+          setLoading(false);
+          return;
+        }
+        throw err;
+      }
+
+      await updateMessengerProfile(formData, token!);
+
+      alert("Профиль успешно сохранён");
+    } catch (err: any) {
+      console.error("Ошибка при отправке формы:", err.message);
+      alert(err.message || "Ошибка при отправке формы");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <main className="bg-gradient-main h-screen w-full grid">
-      <section className="m-8 px-4 pt-6 pb-10 bg-white rounded-lg flex flex-col gap-5">
+      <section className="m-4 px-4 pt-6 pb-10 bg-white rounded-lg flex flex-col gap-5">
         <nav className="flex items-center justify-between">
-          <Link href="/">
+          <Link href="/signup/confirmation">
             <ChevronLeft />
           </Link>
           <Logo width={56} height={50} />
@@ -55,12 +108,14 @@ export default function AboutMePage() {
             <TextInput
               id="username"
               name="username"
+              validationVariant="nickname"
               label="Придумайте никнейм"
               value={formData.username}
               onChange={(e) =>
                 setFormData((prev) => ({ ...prev, username: e.target.value }))
               }
               required
+              error={nicknameError}
             />
           </div>
 
@@ -73,14 +128,13 @@ export default function AboutMePage() {
           </p>
 
           <Button
-            variant={
-              !formData.name || !formData.username ? "disabled" : "primary"
-            }
+            variant="primary"
+            disabled={!formData.name || !formData.username || loading}
             full={true}
             type="submit"
-            children="Зарегистрироваться"
+            children={loading ? "Сохраняем..." : "Зарегистрироваться"}
             size="lg"
-          ></Button>
+          />
         </form>
       </section>
     </main>

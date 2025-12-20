@@ -31,7 +31,6 @@ interface TextInputProps
 }
 
 const BASE_CONFIG: InputConfig = {
-  // Для поля Имя в регистрации и полей с тесктом в настройках
   label: "Введите имя",
   minLength: 2,
   maxLength: 30,

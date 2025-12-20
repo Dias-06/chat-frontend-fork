@@ -8,6 +8,74 @@ export const MsgBubble = () => {
     "https://i.pinimg.com/1200x/20/55/ec/2055ec173eba4f16e4fb0187522d9d4e.jpg",
   ];
 
+  const textNode = (msg: string, time: string) => {
+    return (
+      <div className="flex gap-2">
+        <p className="leading-[1.3]">{msg}</p>
+        <p className="text-sm text-gray leading-[1.2] self-end">{time}</p>
+      </div>
+    );
+  };
+
+  const fileNode = (
+    fileName: string,
+    size: number,
+    time: string,
+    previewSrc?: string,
+    isLoading?: boolean
+  ) => {
+    return (
+      <div className="flex gap-1.5">
+        <div className="flex items-center gap-3">
+          {previewSrc ? (
+            <img
+              alt="preview"
+              className="rounded w-12 h-12 object-cover"
+              src={previewSrc}
+            />
+          ) : isLoading ? (
+            <FileLoaderIcon />
+          ) : (
+            <FileIcon />
+          )}
+          <div className="flex flex-col gap-0.5">
+            <p className="max-w-52.25 leading-[1.3] truncate">{fileName}</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-gray leading-[1.2]">{size} МБ</p>
+              <p className="text-sm text-gray leading-[1.2]">{time}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const imagesNode = (images: string[], time: string) => {
+    return (
+      <div className="h-fit max-w-57 relative">
+        <div className="rounded-2xl rounded-bl-[4px] grid grid-cols-2 gap-0.5 overflow-hidden">
+          {images.map((img, i) => {
+            const isLastOdd =
+              i === images.length - 1 && images.length % 2 !== 0;
+            return (
+              <img
+                key={img}
+                className={`w-full h-full bg-cover ${
+                  isLastOdd ? "col-span-2" : ""
+                }`}
+                src={img}
+                alt="picture"
+              />
+            );
+          })}
+        </div>
+        <p className="w-fit px-1.5 py-0.5 rounded-full text-sm text-white leading-[1.2] bg-[#00000066] absolute bottom-2.5 right-3">
+          11:52
+        </p>
+      </div>
+    );
+  };
+
   return (
     <div className="grid grid-cols-3">
       <div className="p-2 h-screen overflow-y-scroll flex flex-col gap-4">

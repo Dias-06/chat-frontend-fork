@@ -31,12 +31,12 @@ const MenuItem = (props : MenuItemProps) => {
         }
     }
   return (
-    <div className="flex flex-col justify-center items-center h-10 w-20 cursor-pointer">
+    <li className="flex flex-col justify-center items-center h-10 w-20 cursor-pointer">
         <span className="text-gray">
             {config[variant].icon}
         </span>
         <p className="text-[14px] font-normal text-gray leading-[120%]">{config[variant].text}</p>
-    </div>
+    </li>
   )
 }
 

@@ -1,1 +1,1 @@
-export { MsgBubble } from "./MsgBubble";
+export { MessageBubble } from "./MsgBubble";

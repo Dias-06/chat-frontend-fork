@@ -1,1 +1,1 @@
-export { MsgBubble } from "./ui";
+export { MessageBubble } from "./ui";

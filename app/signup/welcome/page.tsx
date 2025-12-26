@@ -12,7 +12,7 @@ export const Welcome: React.FC = () => {
   };
   return (
     <main className="bg-gradient-main h-screen w-full grid">
-      <div className="m-8 px-4 pt-6 pb-10 border-2 relative overflow-hidden border-white bg-[#E9E7FE] rounded-lg flex flex-col items-center gap-5">
+      <div className="m-4 px-4 pt-6 pb-10 border-2 relative overflow-hidden border-white bg-[#E9E7FE] rounded-lg flex flex-col items-center gap-5">
         <div className="absolute w-[184px] h-[214px] -top-5 -left-1 z-0 bg-[#FDFDFD] rounded-full blur-[80px] opacity-70 pointer-events-none" />
         <div className="absolute w-[184px] h-[214px] -bottom-4 -left-1.5 z-0 bg-[#FDFDFD] rounded-full blur-[80px] opacity-70 pointer-events-none" />
         <div className="absolute w-[184px] h-[214px] bottom-[130px] -right-5 z-0 bg-[#FDFDFD] rounded-full blur-[80px] opacity-70 pointer-events-none" />

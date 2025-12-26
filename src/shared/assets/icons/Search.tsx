@@ -1,9 +1,9 @@
-interface LogoProps {
+interface SearchProps {
   width: number;
   height: number;
 }
 
-const Logo = ({ width, height }: LogoProps) => {
+const Search = ({ width, height }: SearchProps) => {
   return (
     <svg
       width={width}
@@ -19,4 +19,4 @@ const Logo = ({ width, height }: LogoProps) => {
     </svg>
   );
 };
-export default Logo;
+export default Search;

@@ -22,7 +22,7 @@ const Textarea: React.FC<TextareaProps> = ({
   const generatedId = useId();
   const textareaId = id || generatedId;
 
-  const height = heightVariant === "login" ? "219px" : "150px";
+  const height = heightVariant === "login" ? "280px" : "150px";
 
   const borderStyle = isError
     ? "border-2 border-error"

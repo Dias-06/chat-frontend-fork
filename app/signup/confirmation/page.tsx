@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 
 import { getToken, sendLoginCode } from "@/shared/api/auth/auth.api";
@@ -24,7 +24,7 @@ const RESEND_TIMEOUT = 60;
 
 /* ================= page ================= */
 
-export default function ConfirmationPage() {
+export function ConfirmationPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -227,5 +227,19 @@ export default function ConfirmationPage() {
         onClose={() => setIsHelpModalOpen(false)}
       />
     </main>
+  );
+}
+
+export default function ConfirmationPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="h-screen w-full bg-white flex items-center justify-center">
+          Загрузка...
+        </div>
+      }
+    >
+      <ConfirmationPageContent />
+    </Suspense>
   );
 }

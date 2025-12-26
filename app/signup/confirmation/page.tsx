@@ -119,6 +119,9 @@ export default function ConfirmationPage() {
     }
   };
 
+  const handleSupportScreen = () => {
+    router.push("./support");
+  };
   /* ================= render ================= */
 
   return (
@@ -131,7 +134,6 @@ export default function ConfirmationPage() {
           </div>
         )}
 
-        {/* nav */}
         <nav className="flex items-center">
           <Link href="/signup/phone-input">
             <ChevronLeft />
@@ -142,7 +144,6 @@ export default function ConfirmationPage() {
           </div>
         </nav>
 
-        {/* header */}
         <header className="flex flex-col">
           <h1 className="text-[32px] text-center font-semibold mt-12">А-Чат</h1>
 
@@ -157,7 +158,6 @@ export default function ConfirmationPage() {
           <p className="font-medium text-[18px] mt-2 text-center">{phone}</p>
         </header>
 
-        {/* otp */}
         <div className="flex flex-col mt-4">
           <div className="flex items-center justify-center gap-1 mb-4 relative">
             {showTooltip && (
@@ -192,7 +192,6 @@ export default function ConfirmationPage() {
           />
         </div>
 
-        {/* resend */}
         <div className="mt-4 text-center">
           {timer === 0 ? (
             <p
@@ -216,14 +215,13 @@ export default function ConfirmationPage() {
         </div>
       </section>
 
-      {/* help modal */}
       <ConfirmModal
         isOpen={isHelpModalOpen}
         title="Не приходит код?"
         buttonsLayout="column"
         spacing="compact"
         buttons={[
-          { label: "Обратиться в поддержку", onClick: () => {} },
+          { label: "Обратиться в поддержку", onClick: handleSupportScreen },
           { label: "Назад", onClick: () => setIsHelpModalOpen(false) },
         ]}
         onClose={() => setIsHelpModalOpen(false)}

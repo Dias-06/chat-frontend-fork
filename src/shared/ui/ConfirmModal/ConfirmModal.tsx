@@ -111,6 +111,7 @@ export const ConfirmModal = ({
             {buttons.map((btn, index) => (
               <Button
                 key={index}
+                type="button"
                 full
                 size="lg"
                 variant={

@@ -43,7 +43,6 @@ const AddedService = (props:AddedServiceProps) => {
          animate = {controls}
          onDragEnd={(ev,info) =>{
             if(!isOpen){
-              console.log(info.velocity.x)
               if(info.velocity.x < -100 || info.offset.x < -31){
                 controls.start({x: -63})
                 setIsOpen(true);

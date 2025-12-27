@@ -13,6 +13,8 @@ export default function Home() {
         content="Lorem ipsum is a dummy or placeholder text commonly used in graphic design, publishing, and web development."
         answerContent="Lorem ipsum is a dummy or placeholder text commonly used in graphic design, publishing, and web development."
         fileName="Lorem_ipsum_is_a_dummy_or_placeholder_text.png"
+        forwardedFrom="Someone"
+        avatarSrc={images[0]}
         time="12:30"
         type="sent"
         images={images}

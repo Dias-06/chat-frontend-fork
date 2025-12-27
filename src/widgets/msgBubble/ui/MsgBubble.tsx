@@ -1,5 +1,6 @@
 import { AnswerNode } from "./nodes/AnswerNode";
 import { FileMessage } from "./nodes/FileMessage";
+import { ForwardedNode } from "./nodes/ForwardedNode";
 import { ImagesMessage } from "./nodes/ImagesMessage";
 import { ImagesNode } from "./nodes/ImagesNode";
 import { TextMessage } from "./nodes/TextMessage";
@@ -13,6 +14,8 @@ interface MessageBubbleProps {
   images?: string[];
   size?: number;
   previewSrc?: string;
+  forwardedFrom?: string;
+  avatarSrc?: string;
   isLoading?: boolean;
   person?: string;
 }
@@ -26,6 +29,8 @@ export const MessageBubble = ({
   images,
   size,
   previewSrc,
+  forwardedFrom,
+  avatarSrc,
   isLoading,
   person,
 }: MessageBubbleProps) => {
@@ -37,6 +42,13 @@ export const MessageBubble = ({
           : "rounded-2xl rounded-bl-[4px]"
       } overflow-hidden max-w-57 w-fit h-fit`}
     >
+      {forwardedFrom && avatarSrc && (
+        <ForwardedNode
+          forwardedFrom={forwardedFrom}
+          avatarSrc={avatarSrc}
+          type={type}
+        />
+      )}
       {answerContent && person && (
         <AnswerNode person={person} content={answerContent} type={type} />
       )}

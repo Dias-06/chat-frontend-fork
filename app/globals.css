@@ -12,6 +12,7 @@
   --color-primary: #7763e4; /* Акцентный (фиолетовый), соответствует DEFAULT */
   --color-primary-dark: #615aa3; /* Акцентный темный (для ховера) */
   --color-violet-secondary: rgba(239, 238, 247, 1);
+  --color-violet-forwarded: #9587f5; /* Для пересланных */
 
   /*
   * ВТОРОСТЕПЕННЫЙ АКЦЕНТ (Secondary Teal)

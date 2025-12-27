@@ -47,14 +47,27 @@ export const MessageBubble = ({
           forwardedFrom={forwardedFrom}
           avatarSrc={avatarSrc}
           type={type}
+          classFix={!images ? "pb-1.5" : ""}
         />
       )}
       {answerContent && person && (
-        <AnswerNode person={person} content={answerContent} type={type} />
+        <AnswerNode
+          person={person}
+          content={answerContent}
+          type={type}
+          classFix={!images ? "pb-1.5" : ""}
+        />
       )}
       {images && !content && <ImagesNode images={images} />}
       {images && content && <ImagesMessage images={images} time={time} />}
-      {content && <TextMessage content={content} time={time} type={type} />}
+      {content && (
+        <TextMessage
+          content={content}
+          time={time}
+          type={type}
+          classFix={!images && (answerContent || forwardedFrom) ? "pt-0" : ""}
+        />
+      )}
 
       {fileName && size && (
         <FileMessage

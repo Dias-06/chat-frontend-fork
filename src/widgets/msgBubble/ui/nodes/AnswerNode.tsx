@@ -3,6 +3,7 @@ interface answerNodeProps {
   content: string;
   previewSrc?: string;
   type: "sent" | "recieved";
+  classFix: string;
 }
 
 export const AnswerNode = ({
@@ -10,12 +11,13 @@ export const AnswerNode = ({
   content,
   previewSrc,
   type,
+  classFix,
 }: answerNodeProps) => {
   return (
     <div
       className={`${
         type === "sent" ? "bg-secondary-light" : "bg-white"
-      } px-3 py-2.5`}
+      } ${classFix} px-3 py-2.5`}
     >
       <div
         className={`${

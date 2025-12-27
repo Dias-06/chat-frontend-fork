@@ -2,18 +2,20 @@ interface ForwardedNodeProps {
   avatarSrc: string;
   forwardedFrom: string;
   type: "sent" | "recieved";
+  classFix: string;
 }
 
 export const ForwardedNode = ({
   avatarSrc,
   forwardedFrom,
   type,
+  classFix,
 }: ForwardedNodeProps) => {
   return (
     <div
       className={`${
         type === "sent" ? "bg-secondary-light" : "bg-white"
-      } h-fit w-full px-3 py-2.5 flex flex-col gap-0.5`}
+      } ${classFix} h-fit w-full px-3 py-2.5 flex flex-col gap-0.5`}
     >
       <p className="text-sm leading-[1.2] text-violet-forwarded">
         Переслано от

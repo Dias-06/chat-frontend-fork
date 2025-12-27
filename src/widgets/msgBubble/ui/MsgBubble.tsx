@@ -1,3 +1,4 @@
+import { MessageStatusNode } from "./MessageStatusNode";
 import { AnswerNode } from "./nodes/AnswerNode";
 import { FileMessage } from "./nodes/FileMessage";
 import { ForwardedNode } from "./nodes/ForwardedNode";
@@ -18,6 +19,7 @@ interface MessageBubbleProps {
   avatarSrc?: string;
   isLoading?: boolean;
   person?: string;
+  status?: "sending" | "unread" | "read";
 }
 
 export const MessageBubble = ({
@@ -33,6 +35,7 @@ export const MessageBubble = ({
   avatarSrc,
   isLoading,
   person,
+  status,
 }: MessageBubbleProps) => {
   return (
     <div
@@ -59,12 +62,19 @@ export const MessageBubble = ({
         />
       )}
       {images && !content && <ImagesNode images={images} />}
-      {images && content && <ImagesMessage images={images} time={time} />}
+      {images && content && (
+        <ImagesMessage
+          images={images}
+          time={time}
+          sentIcon={<MessageStatusNode status={status} isOverlay />}
+        />
+      )}
       {content && (
         <TextMessage
           content={content}
           time={time}
           type={type}
+          sentIcon={<MessageStatusNode status={status} />}
           classFix={!images && (answerContent || forwardedFrom) ? "pt-0" : ""}
         />
       )}
@@ -77,6 +87,7 @@ export const MessageBubble = ({
           previewSrc={previewSrc}
           isLoading={isLoading}
           type={type}
+          sentIcon={<MessageStatusNode status={status} />}
         />
       )}
     </div>

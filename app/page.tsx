@@ -22,6 +22,7 @@ export default function Home() {
         previewSrc={images[0]}
         person="Someone"
         isLoading={false}
+        status="sending"
       />
     </div>
   );

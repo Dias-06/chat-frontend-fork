@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { FileIcon } from "./icons/FileIcon";
 import { FileLoaderIcon } from "./icons/FileLoaderIcon";
 
@@ -8,6 +9,7 @@ interface FileMessageProps {
   previewSrc?: string | null;
   isLoading?: boolean;
   type: "sent" | "recieved";
+  sentIcon: ReactNode;
 }
 
 export const FileMessage = ({
@@ -17,6 +19,7 @@ export const FileMessage = ({
   previewSrc = null,
   isLoading = true,
   type,
+  sentIcon,
 }: FileMessageProps) => {
   return (
     <div
@@ -40,7 +43,10 @@ export const FileMessage = ({
           <p className="leading-[1.3] truncate max-w-full">{fileName}</p>
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm text-gray leading-[1.2]">{size} МБ</p>
-            <p className="text-sm text-gray leading-[1.2]">{time}</p>
+            <div className="flex gap-0.5">
+              <p className="text-sm text-gray leading-[1.2]">{time}</p>
+              {type === "sent" && sentIcon}
+            </div>
           </div>
         </div>
       </div>

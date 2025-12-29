@@ -52,12 +52,12 @@ const AddedService = (props:AddedServiceProps) => {
               }
             }
             else{
-              if(info.velocity.x < 300){
-                controls.start({x: -63})
+              if(info.velocity.x > 300 || info.offset.x > 31){
+                  controls.start({x: 0})
+                  setIsOpen(false)
               }
               else{
-                controls.start({x: 0})
-                setIsOpen(false)
+                controls.start({x: -63})    
               }
             }
          }}>

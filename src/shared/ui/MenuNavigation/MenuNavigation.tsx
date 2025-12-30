@@ -2,7 +2,7 @@ import { MenuItem } from "../MenuItem"
 
 const MenuNavigation = () => {
   return (
-    <section className="border-t border-t-[#000000B2] py-2 w-full">
+    <section className="border-t border-t-[#0000005a] py-2 w-full">
             <ul className="flex items-center justify-center gap-3 list-none">
                 <MenuItem variant="chats" />
                 <MenuItem variant="contacts" />

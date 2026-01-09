@@ -36,7 +36,7 @@ export const ServiceCard = (props: ServiceCardProps) => {
     }
     const cur_config = config[variant];
   return (
-    <div className="flex items-center h-[228px] flex-col gap-3 bg-white text-overlay-dark px-[5px] py-5 rounded-2xl border-[#CEC8FF] border">
+    <div className="flex items-center h-[250px] flex-col justify-between gap-3 bg-white text-overlay-dark px-[13px] py-5 rounded-2xl border-[#CEC8FF] border">
         <div className="flex items-center flex-col gap-1">
             <img width={23} height={18} src={cur_config.icon.src} alt="" />
             <h1 className="text-[16px] font-semibold">{cur_config.title}</h1>

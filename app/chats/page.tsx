@@ -7,9 +7,10 @@ import MenuNavigation from "@/shared/ui/MenuNavigation/MenuNavigation";
 import { ChatListItem } from "@widgets/ChatListItem/ui/ChatListItem";
 import { ConfirmModal } from "@/shared/ui/ConfirmModal/ConfirmModal";
 import { AddContactModal } from "@/shared/ui/AddContactModal/AddContactModal";
+import { ChatHeader } from "@/widgets/СhatHeader/ChatHeader";
 
 interface Chat {
-  id: string;
+  id: number; 
   name: string;
   avatarUrl: string;
   lastMessage: string;
@@ -25,30 +26,31 @@ interface Chat {
 
 export default function ChatPage() {
   const [searchQuery, setSearchQuery] = useState("");
-  
-  // Состояния для открытия модалок
-  const [deleteChatId, setDeleteChatId] = useState<string | null>(null);
-  const [addContactId, setAddContactId] = useState<string | null>(null);
+  const [deleteChatId, setDeleteChatId] = useState<number | null>(null); // Тип number
+  const [addContactId, setAddContactId] = useState<number | null>(null); // Тип number
+  const [activeChatId, setActiveChatId] = useState<number | null>(1); // Тип number
 
   const [chats, setChats] = useState<Chat[]>([
     {
-      id: "1",
+      id: 1,
       name: "Анна Павлова",
       avatarUrl: "i.pravatar.cc",
-      lastMessage: "Привет. Я оставил две стремянки и два шуруповёрта. Один в кейсе, а другой просто так. Одна батарейка может кончиться, тогда будете одним добивать. Воды с собой возьмите, там ничего уже не осталось.",
+      lastMessage: "Привет. Я оставил две стремянки и два шуруповёрта...",
       timestamp: "10:45",
       isOnline: true,
+      wasOnlineAt: Math.floor(Date.now() / 1000) - 300,
       isPinned: true,
       isMuted: false,
       unreadCount: 5,
     },
     {
-      id: "2",
+      id: 2,
       name: "Влад Ляшев",
       avatarUrl: "i.pravatar.cc",
       lastMessage: "Все документы подписаны.",
       timestamp: "30.12.2023",
       isOnline: false,
+      wasOnlineAt: Math.floor(Date.now() / 1000) - 86400,
       isPinned: false,
       isMuted: true,
       isSent: true,
@@ -56,7 +58,7 @@ export default function ChatPage() {
       unreadCount: 0,
     },
     {
-      id: "3",
+      id: 3,
       name: "Мария Петрова",
       avatarUrl: "i.pravatar.cc",
       lastMessage: "Воды с собой возьмите, там ничего не осталось.",
@@ -70,34 +72,41 @@ export default function ChatPage() {
     }
   ]);
 
-  // Находим объект чата для отображения в модалке (имя и т.д.)
+  const activeChat = useMemo(() => 
+    chats.find(c => c.id === activeChatId), 
+    [activeChatId, chats]
+  );
+
   const selectedDeleteChat = useMemo(() => 
-    chats.find(c => String(c.id) === String(deleteChatId)), 
+    chats.find(c => c.id === deleteChatId), 
     [deleteChatId, chats]
   );
   
   const selectedAddChat = useMemo(() => 
-    chats.find(c => String(c.id) === String(addContactId)), 
+    chats.find(c => c.id === addContactId), 
     [addContactId, chats]
   );
 
-  // Изменение свойств (закреп, звук, прочтение)
-  const toggleProperty = useCallback((id: string, key: keyof Chat) => {
+  // Разделение ответственности: простая смена boolean свойств
+  const toggleBooleanProperty = useCallback((id: number, key: keyof Pick<Chat, 'isPinned' | 'isMuted'>) => {
+    setChats((prev) => prev.map((chat) => 
+      chat.id === id ? { ...chat, [key]: !chat[key] } : chat
+    ));
+  }, []);
+
+  // Разделение ответственности: сложная логика статуса чтения
+  const toggleReadStatus = useCallback((id: number) => {
     setChats((prev) => prev.map((chat) => {
-      if (String(chat.id) === String(id)) {
-        if (key === "isRead") {
-          const isCurrentlyUnread = chat.unreadCount > 0 || !chat.isRead;
-          return isCurrentlyUnread 
-            ? { ...chat, isRead: true, unreadCount: 0, isSent: true }
-            : { ...chat, isRead: false, unreadCount: 1, isSent: true };
-        }
-        return { ...chat, [key]: !chat[key] };
+      if (chat.id === id) {
+        const isCurrentlyUnread = chat.unreadCount > 0 || !chat.isRead;
+        return isCurrentlyUnread 
+          ? { ...chat, isRead: true, unreadCount: 0, isSent: true }
+          : { ...chat, isRead: false, unreadCount: 1, isSent: true };
       }
       return chat;
     }));
   }, []);
 
-  // Поиск и сортировка
   const filteredAndSortedChats = useMemo(() => {
     return chats
       .filter((chat) => chat.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -105,75 +114,66 @@ export default function ChatPage() {
   }, [chats, searchQuery]);
 
   return (
-    <div className="flex flex-col h-screen max-w-[450px] mx-auto bg-white border-x border-gray-light shadow-2xl relative overflow-hidden">
-      
-      {/* HEADER */}
-      <div className="p-4 flex items-center gap-3 bg-gray-light z-20">
-        <div className="flex-1">
-          <SearchInput 
-            theme="light"
-            height="44px"
-            value={searchQuery} 
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)} 
-            placeholder="Поиск"
-          />
+    <div className="flex h-screen w-full bg-white overflow-hidden">
+      <aside className="flex flex-col w-full max-w-[450px] border-r border-gray-light relative bg-white">
+        <div className="p-4 flex items-center gap-3 bg-gray-light z-20">
+          <div className="flex-1">
+            <SearchInput 
+              theme="light"
+              height="44px"
+              value={searchQuery} 
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)} 
+              placeholder="Поиск"
+            />
+          </div>
+          <CreateButton />
         </div>
-        <CreateButton />
-      </div>
 
-      {/* CHAT LIST */}
-      <div className="flex-1 overflow-y-auto pb-24 scrollbar-hide bg-gray-light">
-        {filteredAndSortedChats.map((chat, index) => (
-          <ChatListItem
-            key={chat.id}
-            {...chat}
-            onPinToggle={() => toggleProperty(chat.id, "isPinned")}
-            onMuteToggle={() => toggleProperty(chat.id, "isMuted")}
-            onReadToggle={() => toggleProperty(chat.id, "isRead")}
-            onDelete={() => setDeleteChatId(chat.id)} 
-            onAddContact={() => setAddContactId(chat.id)}
-            showDivider={index !== filteredAndSortedChats.length - 1}
-            onClick={(id) => console.log("Переход в чат:", id)}
-          />
-        ))}
-      </div>
+        <div className="flex-1 overflow-y-auto pb-24 scrollbar-hide bg-gray-light">
+          {filteredAndSortedChats.map((chat, index) => (
+            <ChatListItem
+              key={chat.id}
+              {...chat}
+              id={String(chat.id)} // Преобразование для пропса компонента, если он ждет string
+              onPinToggle={() => toggleBooleanProperty(chat.id, "isPinned")}
+              onMuteToggle={() => toggleBooleanProperty(chat.id, "isMuted")}
+              onReadToggle={() => toggleReadStatus(chat.id)}
+              onDelete={() => setDeleteChatId(chat.id)} 
+              onAddContact={() => setAddContactId(chat.id)}
+              showDivider={index !== filteredAndSortedChats.length - 1}
+              onClick={(id) => setActiveChatId(Number(id))}
+            />
+          ))}
+        </div>
 
-      {/* NAVIGATION */}
-      <div className="absolute bottom-0 left-0 right-0 z-30 bg-white">
-        <MenuNavigation />
-      </div>
+        <div className="absolute bottom-0 left-0 right-0 z-30 bg-white">
+          <MenuNavigation />
+        </div>
+      </aside>
 
-      {/* MODALS SECTION */}
       
-      {/* Модалка удаления чата */}
+
       {deleteChatId && (
         <ConfirmModal
           isOpen={true}
           title="Удалить чат"
-          description={`Вы действительно хотите удалить чат с ${selectedDeleteChat?.name} без возможности восстановления?`}
+          description={`Вы действительно хотите удалить чат с ${selectedDeleteChat?.name}?`}
+          buttonsLayout="row"
           buttons={[
-            { 
-              label: "Отмена", 
-              onClick: () => {
-                console.log("Клик: Отмена");
-                setDeleteChatId(null);
-              }
-            },
+            { label: "Отмена", onClick: () => setDeleteChatId(null) },
             { 
               label: "Удалить", 
               onClick: () => {
-                console.log("Клик: Удалить ID", deleteChatId);
-                setChats((prev) => prev.filter((chat) => String(chat.id) !== String(deleteChatId)));
+                setChats(prev => prev.filter(c => c.id !== deleteChatId));
                 setDeleteChatId(null);
+                if (activeChatId === deleteChatId) setActiveChatId(null);
               } 
             },
           ]}
-          buttonsLayout="row"
           onClose={() => setDeleteChatId(null)}
         />
       )}
 
-      {/* Модалка добавления контакта */}
       {addContactId && (
         <AddContactModal 
           isOpen={true} 

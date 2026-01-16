@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { FileIcon } from "./icons/FileIcon";
-import { FileLoaderIcon } from "./icons/FileLoaderIcon";
+import { LoadingIcon } from "./icons/LoadingIcon";
 
 interface FileMessageProps {
   fileName: string;
@@ -35,7 +35,7 @@ export const FileMessage = ({
             src={previewSrc}
           />
         ) : isLoading ? (
-          <FileLoaderIcon className="flex-none" />
+          <LoadingIcon className="flex-none" />
         ) : (
           <FileIcon className="flex-none" />
         )}

@@ -1,4 +1,4 @@
-export const FileLoaderIcon = ({
+export const LoadingIcon = ({
   width = 48,
   height = 48,
   className = "",

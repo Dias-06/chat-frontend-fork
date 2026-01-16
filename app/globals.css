@@ -11,7 +11,8 @@
   * В v4 мы определяем оттенки явно, чтобы получить классы типа bg-primary или bg-primary-dark
   */
   --color-primary: #7763E4;      /* Акцентный (фиолетовый), соответствует DEFAULT */
-  --color-primary-dark: #615AA3; /* Акцентный темный (для ховера) */
+  --color-primary-dark: #615AA3;
+  --color-primary-light: #CEC8FF; /* Акцентный темный (для ховера) */
   --color-violate-light: rgba(239, 238, 247, 1);
  
   /*

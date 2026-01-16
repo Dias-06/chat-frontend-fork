@@ -50,7 +50,7 @@ export const FileMessage = ({
         <div className="max-w-52.25 flex flex-col gap-0.5 min-w-0">
           <p className="leading-[1.3] truncate max-w-full">{fileName}</p>
           <div className="flex items-center justify-between gap-4">
-            <p className="text-sm text-gray leading-[1.2]">{size} МБ</p>
+            <p className="text-sm text-gray leading-[1.2]">{(size / (1024 * 1024)).toFixed(2)} МБ</p>
             <div className="flex gap-0.5">
               <p className="text-sm text-gray leading-[1.2]">{time}</p>
               {type === "sent" && sentIcon}

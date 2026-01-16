@@ -10,6 +10,8 @@ interface FileMessageProps {
   isLoading?: boolean;
   type: "sent" | "recieved";
   sentIcon: ReactNode;
+  stopLoading: () => void;
+  onClick: () => void;
 }
 
 export const FileMessage = ({
@@ -20,6 +22,8 @@ export const FileMessage = ({
   isLoading = true,
   type,
   sentIcon,
+  stopLoading,
+  onClick,
 }: FileMessageProps) => {
   return (
     <div
@@ -35,9 +39,13 @@ export const FileMessage = ({
             src={previewSrc}
           />
         ) : isLoading ? (
-          <LoadingIcon className="flex-none" />
+          <button onClick={stopLoading}>
+            <LoadingIcon className="flex-none" />
+          </button>
         ) : (
-          <FileIcon className="flex-none" />
+          <button onClick={onClick}>
+            <FileIcon className="flex-none" />
+          </button>
         )}
         <div className="max-w-52.25 flex flex-col gap-0.5 min-w-0">
           <p className="leading-[1.3] truncate max-w-full">{fileName}</p>

@@ -5,6 +5,7 @@ import { ForwardedNode } from "./nodes/ForwardedNode";
 import { ImagesMessage } from "./nodes/ImagesMessage";
 import { ImagesNode } from "./nodes/ImagesNode";
 import { TextMessage } from "./nodes/TextMessage";
+import { VoiceMessage } from "./nodes/VoiceMessage";
 
 interface MessageBubbleProps {
   time: string;
@@ -20,6 +21,10 @@ interface MessageBubbleProps {
   isLoading?: boolean;
   person?: string;
   status?: "sending" | "unread" | "read";
+  audioSrc?: string;
+  audioDuration?: string;
+  stopLoading?: () => void;
+  onClick?: () => void;
 }
 
 export const MessageBubble = ({
@@ -36,6 +41,10 @@ export const MessageBubble = ({
   isLoading,
   person,
   status,
+  audioSrc,
+  audioDuration,
+  stopLoading,
+  onClick,
 }: MessageBubbleProps) => {
   return (
     <div
@@ -79,7 +88,7 @@ export const MessageBubble = ({
         />
       )}
 
-      {fileName && size && (
+      {fileName && size && stopLoading && onClick && (
         <FileMessage
           fileName={fileName}
           size={size}
@@ -88,6 +97,23 @@ export const MessageBubble = ({
           isLoading={isLoading}
           type={type}
           sentIcon={<MessageStatusNode status={status} />}
+          stopLoading={stopLoading}
+          onClick={onClick}
+        />
+      )}
+      {audioSrc && audioDuration && stopLoading && (
+        <VoiceMessage
+          isLoading={isLoading ?? false}
+          audioSrc={audioSrc}
+          duration={audioDuration}
+          time={time}
+          type={type}
+          sentIcon={<MessageStatusNode status={status} />}
+          waveform={[
+            5, 12, 7, 2, 14, 8, 16, 3, 10, 6, 2, 17, 9, 11, 4, 7, 15, 6, 8, 13,
+            3, 12, 14, 5, 9, 2, 17, 10, 6, 11, 8,
+          ]}
+          stopLoading={stopLoading}
         />
       )}
     </div>

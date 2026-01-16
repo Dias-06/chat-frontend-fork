@@ -1,3 +1,5 @@
+"use client";
+
 import { MessageBubble } from "@/widgets/msgBubble/index";
 
 export default function Home() {
@@ -21,8 +23,12 @@ export default function Home() {
         size={10.5}
         previewSrc={images[0]}
         person="Someone"
+        status="read"
+        audioSrc="/"
+        audioDuration="1:13"
+        stopLoading={() => {}}
+        onClick={() => {}}
         isLoading={false}
-        status="sending"
       />
     </div>
   );

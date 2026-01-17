@@ -1,7 +1,7 @@
 import { LoadingIcon } from "./LoadingIcon";
 
 interface PlayingIconProps {
-  status: "playing" | "loading" | "idle";
+  status: "idle" | "loading" | "playing" | "paused";
 }
 
 export const PlayingIcon = ({ status = "idle" }: PlayingIconProps) => {

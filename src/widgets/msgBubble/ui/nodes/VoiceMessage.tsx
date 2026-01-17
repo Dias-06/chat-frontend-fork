@@ -1,57 +1,98 @@
 import { useEffect, useRef, useState } from "react";
 import { PlayingIcon } from "./icons/PlayingIcon";
 
+type PlayerStatus = "idle" | "loading" | "playing" | "paused";
+
 interface VoiceMessageProps {
-  isLoading: boolean;
+  status: PlayerStatus;
   audioSrc: string;
   duration: string;
   waveform: number[];
   time: string;
   type: "sent" | "recieved";
   sentIcon?: React.ReactNode;
-  stopLoading: () => void;
+
+  onPlay: () => void;
+  onPause: () => void;
+  onStop: () => void;
 }
 
 export const VoiceMessage = ({
-  isLoading,
+  status,
   audioSrc,
   duration,
   waveform,
   time,
   type,
   sentIcon,
-  stopLoading,
+  onPlay,
+  onPause,
+  onStop,
 }: VoiceMessageProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
-
-  const togglePlay = () => {
-    if (!audioRef.current) return;
-
-    isPlaying ? audioRef.current.pause() : audioRef.current.play();
-
-    setIsPlaying(!isPlaying);
-  };
+  const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    const updateProgress = () => {
-      if (!isPlaying) return;
-      const idx = Math.floor((audio.currentTime / audio.duration) * 31);
-      setProgress(idx);
+    const onTimeUpdate = () => {
+      if (!audio.duration) return;
+      const index = Math.floor(
+        (audio.currentTime / audio.duration) * waveform.length,
+      );
+      setProgress(index);
+      setCurrentTime(audio.currentTime);
     };
 
-    audio.addEventListener("timeupdate", updateProgress);
-    audio.addEventListener("ended", () => setIsPlaying(false));
+    const onEnded = () => {
+      setCurrentTime(0);
+      onStop();
+    };
+
+    audio.addEventListener("timeupdate", onTimeUpdate);
+    audio.addEventListener("ended", onEnded);
 
     return () => {
-      audio.removeEventListener("timeupdate", updateProgress);
-      audio.removeEventListener("ended", () => setIsPlaying(false));
+      audio.removeEventListener("timeupdate", onTimeUpdate);
+      audio.removeEventListener("ended", onEnded);
     };
-  }, [isPlaying]);
+  }, [waveform.length, onStop]);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (status === "playing") {
+      audio.play().catch(() => onPause());
+    }
+
+    if (status === "paused") {
+      audio.pause();
+    }
+
+    if (status === "idle") {
+      audio.pause();
+      audio.currentTime = 0;
+      setCurrentTime(0);
+      setProgress(0);
+    }
+  }, [status, onPause]);
+
+  const handleClick = () => {
+    if (status === "loading") return;
+    if (status === "playing") onPause();
+    else onPlay();
+  };
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
+  const isPlaying = status === "playing";
 
   return (
     <div
@@ -59,13 +100,8 @@ export const VoiceMessage = ({
         type === "sent" ? "bg-secondary-light" : "bg-white"
       }`}
     >
-      <button
-        onClick={isLoading ? stopLoading : togglePlay}
-        className="cursor-pointer"
-      >
-        <PlayingIcon
-          status={isPlaying ? "playing" : isLoading ? "loading" : "idle"}
-        />
+      <button onClick={handleClick} className="cursor-pointer">
+        <PlayingIcon status={status} />
       </button>
 
       <div className="grid gap-1">
@@ -73,7 +109,7 @@ export const VoiceMessage = ({
           {waveform.map((v, i) => (
             <div
               key={i}
-              className="w-[2px] bg-current rounded rounded-[10px]"
+              className="w-[2px] rounded"
               style={{
                 height: `${v}px`,
                 backgroundColor:
@@ -82,16 +118,20 @@ export const VoiceMessage = ({
             />
           ))}
         </div>
+
         <div className="flex items-center justify-between">
-          <span className="text-sm text-gray leading-[1.2]">{duration}</span>
+          <span className="text-sm text-gray">
+            {isPlaying ? formatTime(currentTime) : duration}
+          </span>
+
           <div className="flex gap-0.5 items-center">
-            <span className="text-sm text-gray leading-[1.2]">{time}</span>
+            <span className="text-sm text-gray">{time}</span>
             {type === "sent" && sentIcon}
           </div>
         </div>
       </div>
 
-      <audio ref={audioRef} src={audioSrc} />
+      <audio ref={audioRef} src={audioSrc} preload="metadata" />
     </div>
   );
 };

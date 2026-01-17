@@ -23,8 +23,12 @@ interface MessageBubbleProps {
   status?: "sending" | "unread" | "read";
   audioSrc?: string;
   audioDuration?: string;
+  playerStatus: "idle" | "loading" | "playing" | "paused";
   stopLoading?: () => void;
   onClick?: () => void;
+  onPlay?: () => void;
+  onPause?: () => void;
+  onStop?: () => void;
 }
 
 export const MessageBubble = ({
@@ -43,8 +47,12 @@ export const MessageBubble = ({
   status,
   audioSrc,
   audioDuration,
+  playerStatus,
   stopLoading,
   onClick,
+  onPlay,
+  onPause,
+  onStop,
 }: MessageBubbleProps) => {
   return (
     <div
@@ -101,19 +109,21 @@ export const MessageBubble = ({
           onClick={onClick}
         />
       )}
-      {audioSrc && audioDuration && stopLoading && (
+      {audioSrc && audioDuration && onPlay && onPause && onStop && (
         <VoiceMessage
-          isLoading={isLoading ?? false}
+          status={playerStatus}
           audioSrc={audioSrc}
           duration={audioDuration}
-          time={time}
-          type={type}
-          sentIcon={<MessageStatusNode status={status} />}
           waveform={[
             5, 12, 7, 2, 14, 8, 16, 3, 10, 6, 2, 17, 9, 11, 4, 7, 15, 6, 8, 13,
             3, 12, 14, 5, 9, 2, 17, 10, 6, 11, 8,
           ]}
-          stopLoading={stopLoading}
+          time={time}
+          type={type}
+          sentIcon={<MessageStatusNode status={status} />}
+          onPlay={onPlay}
+          onPause={onPause}
+          onStop={onStop}
         />
       )}
     </div>

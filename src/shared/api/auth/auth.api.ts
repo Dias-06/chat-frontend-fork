@@ -1,26 +1,16 @@
-import { apiFetch } from "../base";
-import {
-  SendCodeRequest,
-  GetTokenRequest,
-  GetTokenResponse,
-} from "./auth.types";
 
-export function sendLoginCode(data: SendCodeRequest) {
-  return apiFetch(
-    "/api/v1/auth/messenger/login/get/code/",
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-    }
-  );
-}
+import { apiFetch } from "@/shared/api/client";
 
-export function getToken(data: GetTokenRequest) {
-  return apiFetch<GetTokenResponse>(
-    "/api/v1/auth/messenger/login/get/token/",
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-    }
-  );
-}
+export const getToken = (data: { phone_number: string; code: string }) =>
+  apiFetch("/api/v1/auth/messenger/login/get/token/", {
+    method: "POST",
+    skipAuth: true,
+    body: JSON.stringify(data),
+  });
+
+export const sendLoginCode = (data: { phone_number: string; code_len: number }) =>
+  apiFetch("/api/v1/auth/messenger/login/get/code/", {
+    method: "POST",
+    skipAuth: true,
+    body: JSON.stringify(data),
+  });

@@ -1,4 +1,4 @@
-import { apiFetch } from "../base";
+import { apiFetch } from "../client";
 
 interface SupportRequest {
     email: string;

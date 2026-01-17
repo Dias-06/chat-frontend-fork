@@ -13,7 +13,6 @@ import {
   updateMessengerProfile,
   checkNicknameUnique,
 } from "@/shared/api/messenger";
-import { tokenStorage } from "@/shared/lib/tokenStorage";
 
 export default function AboutMePage() {
   const [formData, setFormData] = useState<Props>({
@@ -30,47 +29,22 @@ export default function AboutMePage() {
     setNicknameError("");
 
     try {
-      let token = tokenStorage.getAccess();
-
-      if (!token) {
-        const refresh = tokenStorage.getRefresh();
-        if (!refresh) throw new Error("Необходима авторизация");
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/auth/login/refresh/token/`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ refresh }),
-          }
-        );
-
-        if (!res.ok) throw new Error("Не удалось обновить токен");
-
-        const data = await res.json();
-        tokenStorage.setTokens(data.access, data.refresh);
-        token = data.access;
-      }
-
-      try {
-        await checkNicknameUnique(formData.username, token!);
-      } catch (err: any) {
-        if (err.message.includes("уже занят")) {
-          setNicknameError(err.message);
-          setLoading(false);
-          return;
-        }
-        throw err;
-      }
-
-      await updateMessengerProfile(formData, token!);
+      await checkNicknameUnique(formData.username);
+      await updateMessengerProfile(formData);
 
       alert("Профиль успешно сохранён");
     } catch (err: any) {
-      console.error("Ошибка при отправке формы:", err.message);
-      alert(err.message || "Ошибка при отправке формы");
-    } finally {
-      setLoading(false);
+      if (err?.message?.includes("уже занят")) {
+        setNicknameError(err.message);
+      } else if (
+        err?.message?.toLowerCase().includes("unauthorized") ||
+        err?.message === "Не авторизован"
+      ) {
+        alert("Сессия истекла, войдите снова");
+        // можно редиректить на login
+      } else {
+        alert(err?.message || "Ошибка при отправке формы");
+      }
     }
   };
 

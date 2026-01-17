@@ -13,7 +13,7 @@ import { SendSupport } from "@/shared/api/support/support";
 import { EmailInput } from "@/entities/user/ui/EmailInput";
 import { Textarea } from "@/shared/ui/Textarea";
 
-export default function AboutMePage() {
+export default function SupportPage() {
   const [email, setEmail] = useState("");
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,13 +27,13 @@ export default function AboutMePage() {
     e.preventDefault();
     setLoading(true);
     try {
-      SendSupport({ email: email, text: text });
+      await SendSupport({ email: email, text: text });
       alert("Success!");
       setEmail("");
       setText("");
       handleSuccess();
     } catch (error: any) {
-      const err = error.message?.[0] || "Error occured!";
+      const err = error?.message || "Ошибка при отправке";
       alert(`Fail ${err}`);
     } finally {
       setLoading(false);
@@ -56,7 +56,7 @@ export default function AboutMePage() {
           </h1>
         </header>
 
-        <form /* onSubmit={submit} */ className="flex flex-col h-full pt-4">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full pt-4">
           <div className="flex flex-col gap-3">
             <EmailInput
               value={email}

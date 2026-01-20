@@ -1,10 +1,13 @@
 'use client'
 import React, { useRef } from 'react'
 
-type Props = {}
+type Props = {
+  className?: string
+}
 
 
 const ChatInput = (props: Props) => {
+    const {className} = props
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     function handleInput(){
         const textarea = textareaRef.current
@@ -13,11 +16,11 @@ const ChatInput = (props: Props) => {
         textarea.style.height = textarea.scrollHeight - 2 + "px";
     }
   return (
-    <div className='bg-white px-2 py-3 rounded-[20px] w-2xs flex items-center justify-between gap-3'>
+    <div className='bg-white px-2 py-3 rounded-[20px] w-2xs flex items-end justify-between gap-3 '>
         <textarea 
         rows={1} 
         onInput={handleInput}
-        className='bg-transparent w-full outline-none resize-none text-[16px] leading-[130%] max-h-[150px] overflow-y-auto' 
+        className='bg-transparent w-full outline-none resize-none text-[16px] leading-[130%] max-h-[150px] overflow-y-auto [&::-webkit-scrollbar]:w-0' 
         placeholder='Message'
         ref={textareaRef}
         />

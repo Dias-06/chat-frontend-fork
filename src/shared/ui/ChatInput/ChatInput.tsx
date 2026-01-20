@@ -2,18 +2,20 @@
 import React, { useRef } from 'react'
 
 type Props = {
-  className?: string
+  className?: string,
+  onTextChange: (text: string) => void
 }
 
 
 const ChatInput = (props: Props) => {
-    const {className} = props
+    const {className,onTextChange} = props
     const textareaRef = useRef<HTMLTextAreaElement>(null)
     function handleInput(){
         const textarea = textareaRef.current
         if(!textarea) return
         textarea.style.height = "auto";
         textarea.style.height = textarea.scrollHeight - 2 + "px";
+        onTextChange(textarea.value)
     }
   return (
     <div className='bg-white px-2 py-3 rounded-[20px] w-2xs flex items-end justify-between gap-3 '>
@@ -21,7 +23,7 @@ const ChatInput = (props: Props) => {
         rows={1} 
         onInput={handleInput}
         className='bg-transparent w-full outline-none resize-none text-[16px] leading-[130%] max-h-[150px] overflow-y-auto [&::-webkit-scrollbar]:w-0' 
-        placeholder='Message'
+        placeholder='Сообщение'
         ref={textareaRef}
         />
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">

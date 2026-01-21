@@ -5,7 +5,7 @@ export type UserAvatarVariant =
   | "avatarOnly" // только круглая картинка, без статуса (теперь по умолчанию)
   | "avatarWithStatusRight"; // аватар слева, статус справа
 
-type AvatarProps = {
+export type AvatarProps = {
   /** URL аватара. Приоритет: avatar_webp_url > avatar_url > avatar_webp > avatar */
   avatar_webp_url?: string;
   avatar_url?: string;

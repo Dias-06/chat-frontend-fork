@@ -1,4 +1,5 @@
 import React from 'react'
+import { Button } from '../Button'
 
 type Props = {
     photos: string[]
@@ -7,7 +8,7 @@ type Props = {
 const AvatarGalery = (props: Props) => {
     const {photos} = props
     return(
-        <div className='h-screen bg-white'>
+        <div className='h-screen bg-white flex flex-col'>
             <header className='pt-3 mb-6 relative'>
                 <p className='text-black text-center'>Изменить фото профиля</p>
                 <span className='cursor-pointer absolute top-[15px] right-[15px]'>
@@ -22,7 +23,10 @@ const AvatarGalery = (props: Props) => {
                         <div key={index} className='bg-gray rounded-lg bg-no-repeat bg-center bg-cover h-[115px]' style={{backgroundImage: `url(${item})`}}></div>
                     ))
                 }
-                
+            </div>
+            <div className='flex gap-3 mt-auto pb-17'>
+                <Button variant='secondary' size='md' type='button'>Отменить</Button>
+                <Button variant='primary' size='md' type='button'>Выбрать фото</Button>
             </div>
         </div>
     )

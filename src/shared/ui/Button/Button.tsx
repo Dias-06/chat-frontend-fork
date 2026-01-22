@@ -1,15 +1,15 @@
 import  { ReactNode } from 'react'
 interface ButtonProps{
-  variant: 'primary' | 'secondary' | 'disabled' | 'transparent',
-  full: boolean,
-  disabled: true | false,
+  variant: 'primary' | 'secondary'  | 'transparent',
+  full?: boolean,
+  disabled?: true | false,
   type: 'button' | 'submit',
-  onClick: React.MouseEventHandler<HTMLButtonElement>,
+  onClick?: React.MouseEventHandler<HTMLButtonElement>,
   children: ReactNode,
   size: 'lg' | 'md' | 'sm'
 } 
 const Button = (props : ButtonProps) => {
-   const {variant, children, size,full,type,disabled,onClick} = props;
+   const {variant, children, size,full = true,type,disabled=false,onClick} = props;
    const variants = {
     primary: 'bg-primary text-white cursor-pointer ',
     disabled: 'bg-[#E4E4E4] text-[#C5C5C5] cursor-not-allowed',
@@ -22,7 +22,7 @@ const Button = (props : ButtonProps) => {
     sm: 'font-normal text[14px] px-4 py-0.5 min-w-[89px] leading-[30px]'
    }
   return (
-    <button onClick={onClick} disabled = {disabled} type={type} className={`duration-200 ${full && 'w-full'} flex items-center justify-center transition-all border-0 rounded-lg ${variants[variant]} ${sizes[size]}`}>{children}</button>
+    <button onClick={onClick} disabled = {disabled} type={type} className={`duration-200 ${full && 'w-full'} ${disabled ? variants.disabled : variants[variant]} flex items-center justify-center transition-all border-0 rounded-lg ${sizes[size]}`}>{children}</button>
   )
 }
 

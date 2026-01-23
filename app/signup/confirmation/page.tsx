@@ -5,7 +5,6 @@ import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 
 import { getToken, sendLoginCode } from "@/shared/api/auth/auth.api";
-import { tokenStorage } from "@/shared/lib/tokenStorage";
 
 import { Logo } from "@icons/Logo";
 import { ChevronLeft } from "./ui/icons/ChevronLeft";
@@ -16,13 +15,9 @@ import Triangle from "./ui/icons/Triangle";
 import OtpInput from "@/shared/ui/OtpInput/OTPInput";
 import { ConfirmModal } from "@/shared/ui/ConfirmModal/ConfirmModal";
 
-/* ================= constants ================= */
-
 const CODE_LENGTH = 5;
 const MAX_ATTEMPTS = 5;
 const RESEND_TIMEOUT = 60;
-
-/* ================= page ================= */
 
 export function ConfirmationPageContent() {
   const router = useRouter();
@@ -36,8 +31,6 @@ export function ConfirmationPageContent() {
   }
 
   const phoneNormalized = `+${phone.replace(/\D/g, "")}`;
-
-  /* ================= state ================= */
 
   const [attempts, setAttempts] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
@@ -54,8 +47,6 @@ export function ConfirmationPageContent() {
 
   const attemptsLeft = MAX_ATTEMPTS - attempts;
   const hasError = Boolean(errorText);
-
-  /* ================= effects ================= */
 
   useEffect(() => {
     if (timer <= 0) return;
@@ -91,27 +82,24 @@ export function ConfirmationPageContent() {
       setIsSubmitting(true);
       setErrorText(null);
 
-      const tokens = await getToken({
+      await getToken({
         phone_number: phoneNormalized,
         code,
       });
 
-      tokenStorage.setTokens(tokens.access, tokens.refresh);
       router.push("/signup/about-me");
     } catch {
       setAttempts((prev) => {
         const next = prev + 1;
-
         if (next >= MAX_ATTEMPTS) {
           setIsLocked(true);
           setErrorText("Слишком много неверных попыток.");
-          setIsHelpModalOpen(true); // открываем модалку при блокировке
+          setIsHelpModalOpen(true);
         } else {
           setErrorText(
             `Код введён неверно. Осталось ${MAX_ATTEMPTS - next} попытки.`
           );
         }
-
         return next;
       });
     } finally {
@@ -122,7 +110,6 @@ export function ConfirmationPageContent() {
   const handleSupportScreen = () => {
     router.push("./support");
   };
-  /* ================= render ================= */
 
   return (
     <main className="bg-gradient-main h-screen w-full grid relative">

@@ -10,5 +10,5 @@ export type GetTokenRequest = {
 
 export type GetTokenResponse = {
   access: string;
-  refresh: string;
 };
+

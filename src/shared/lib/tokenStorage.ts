@@ -1,19 +1,13 @@
+let accessToken: string | null = null;
+
 export const tokenStorage = {
-  getAccess() {
-    return localStorage.getItem("access");
+  get() {
+    return accessToken;
   },
-
-  getRefresh() {
-    return localStorage.getItem("refresh");
+  set(token: string) {
+    accessToken = token;
   },
-
-  setTokens(access: string, refresh: string) {
-    localStorage.setItem("access", access);
-    localStorage.setItem("refresh", refresh);
-  },
-
   clear() {
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
+    accessToken = null;
   },
 };

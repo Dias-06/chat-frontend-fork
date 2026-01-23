@@ -20,7 +20,7 @@ export const Welcome: React.FC = () => {
           <BigLogo />
         </div>
 
-        <h1 className="text-[34px] z-10 leading-tight bg-gradient-text bg-clip-text text-transparent font-extrabold mt-4">
+        <h1 className="text-[34px] z-10 leading-tight bg-gradient text-[#4F4C4C] bg-clip-text  font-extrabold mt-4">
           А-Чат
         </h1>
 

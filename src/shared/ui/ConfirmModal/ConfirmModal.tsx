@@ -57,7 +57,7 @@ export const ConfirmModal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="fixed inset-0 m-4 rounded-lg bg-overlay"
+        className="fixed inset-0 m-4 rounded-lg bg-overlay/40 blur-sm"
         onClick={() => onClose?.()}
       />
 
@@ -111,7 +111,6 @@ export const ConfirmModal = ({
             {buttons.map((btn, index) => (
               <Button
                 key={index}
-                type="button"
                 full
                 size="lg"
                 variant={

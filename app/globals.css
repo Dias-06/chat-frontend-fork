@@ -1,71 +1,81 @@
-
 @theme {
   /*
   * ОСНОВНЫЕ ЦВЕТА (Text & Base)
   */
-  --color-white: #FFFFFF;
-  --color-black: #1C1C1E; /* Основной цвет текста */
- 
+  --color-white: #ffffff;
+  --color-black: #1c1c1e; /* Основной цвет текста */
+
   /*
   * АКЦЕНТНЫЕ ЦВЕТА (Primary)
   * В v4 мы определяем оттенки явно, чтобы получить классы типа bg-primary или bg-primary-dark
   */
-  --color-primary: #7763E4;      /* Акцентный (фиолетовый), соответствует DEFAULT */
-  --color-primary-dark: #615AA3; /* Акцентный темный (для ховера) */
+  --color-primary: #7763e4; /* Акцентный (фиолетовый), соответствует DEFAULT */
+  --color-primary-dark: #615aa3; /* Акцентный темный (для ховера) */
+  --color-violet-secondary: rgba(239, 238, 247, 1);
+  --color-violet-forwarded: #9587f5; /* Для пересланных */
+
+  /*
+  * ВТОРОСТЕПЕННЫЙ АКЦЕНТ (Secondary Teal)
+  */
+  --color-secondary: #27c840; /* Бирюзовый акцент */
+  --color-secondary-light: #d7f5f0; /* Бирюзовый светлый акцент */
+
+  --color-primary-light: #CEC8FF; /* Акцентный темный (для ховера) */
   --color-violate-light: rgba(239, 238, 247, 1);
  
   /*
   * ВТОРОСТЕПЕННЫЙ АКЦЕНТ (Secondary Teal)
   */
   --color-secondary: #27C840; /* Бирюзовый акцент */
+  --color-cyan: #EFF7F7; /* Цвет ховера чата */
  
   /* * СЕРЫЕ ЦВЕТА (Gray)
   */
-  --color-gray: #747474;    /* Текст серый, соответствует DEFAULT */
-  --color-gray-light: #F5F6F8; /* Main / Gray light (для фона) */
-  --color-gray-dark: #EEEEEE;  /* Gray Tone / Gray (для фона) */
- 
+  --color-gray: #747474; /* Текст серый, соответствует DEFAULT */
+  --color-gray-light: #f5f6f8; /* Main / Gray light (для фона) */
+  --color-gray-dark: #eeeeee; /* Gray Tone / Gray (для фона) */
+
   /* * СИСТЕМНЫЕ И СПЕЦИАЛЬНЫЕ
   */
-  --color-error: #FF0000; /* System/Red (для ошибок) */
-  --color-btn-disabled: #E4E4E4; /* Для неактивной кнопки*/
- 
+  --color-error: #ff0000; /* System/Red (для ошибок) */
+  --color-btn-disabled: #e4e4e4; /* Для неактивной кнопки*/
+
   /* * ОВЕРЛЕЙ */
-  --color-overlay: #9587F566;
-  --color-overlay-dark: #1C1C1E; /* Прозрачность (96%) */
+  --color-overlay: #9587f566;
+  --color-overlay-dark: #1c1c1e; /* Прозрачность (96%) */
 
   /* Шрифт Roboto */
   --font-sans: var(--font-roboto), sans-serif;
- 
-  /* Gadient*/
-    --background-image-gradient-main: linear-gradient(
-        to bottom,
-        #E2EAFE, 
-        #DCF0EE
-    );
 
-   --background-image-gradient-text: linear-gradient(
-        to bottom,
-        #D7D7D7 0%,
-        #FFF9F9 0%,
-        #4F4C4C 100%
+  /* Gadient*/
+  --background-image-gradient-main: linear-gradient(
+    to bottom,
+    #e2eafe,
+    #dcf0ee
+  );
+
+  --background-image-gradient-text: linear-gradient(
+    to bottom,
+    #d7d7d7 0%,
+    #fff9f9 10%,
+    #4f4c4c 100%
   );
 }
 
-
 @keyframes blink {
-    0%, 100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0;
-    }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .animate-blink {
-    animation: blink 1s step-end infinite;
+  animation: blink 1s step-end infinite;
 }
-body{
-    font-family: var(--font-sans);
+body {
+  font-family: var(--font-sans);
 }
-@import "tailwindcss"
+@import "tailwindcss";

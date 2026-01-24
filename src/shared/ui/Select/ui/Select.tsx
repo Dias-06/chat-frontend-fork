@@ -40,8 +40,8 @@ export const Select = <T extends string | number>({
       style={{ width: width ? `${width}px` : "100%" }}
     >
       <div
-        onClick={() => setIsOpen(!isOpen)}
-        className={`w-full border  pl-2.5 pr-1.5 py-4 text-[18px] leading-[130%] cursor-pointer flex items-center justify-between transition ${
+        onClick={() => setIsOpen(options.length > 0 ? !isOpen : false)}
+        className={`w-full border pl-2.5 pr-1.5 py-4 text-[18px] leading-[130%] cursor-pointer flex items-center justify-between transition ${
           value ? "text-black" : "text-gray"
         } ${isOpen ? "rounded-t-[8px] border-primary border-b-0" : "rounded-[8px] border-gray"}`}
       >

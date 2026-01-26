@@ -27,6 +27,7 @@
       "@widgets/*": ["src/widgets/*"],
 
       "@ui/*": ["src/shared/ui/*"],
+      "@shared-types/*": ["src/shared/types/*"],
       "@lib/*": ["src/shared/lib/*"],
       "@config/*": ["src/shared/config/*"],
       "@icons/*": ["src/shared/assets/icons/*"]

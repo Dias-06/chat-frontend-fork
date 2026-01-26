@@ -15,21 +15,24 @@ interface UserListProps {
 
 export function UserList({ users, onDelete }: UserListProps) {
   return (
-    <div className="flex flex-col bg-white pb-4">
+    <div className="flex flex-col bg-white overflow-hidden">
       {users.map((user) => (
-        // Используем relative и after: для создания линии с отступами
         <div 
           key={user.id} 
-          className="relative after:absolute after:bottom-0 after:left-4 after:right-4 after:h-px after:bg-gray/10"
+          className="relative px-4 py-2 last:after:hidden after:absolute after:bottom-0 after:left-4 after:right-4 after:h-[1px] after:bg-gray-100"
         >
           <UserCell
             {...user}
             onDelete={onDelete}
+            avatarSize={12} 
           />
         </div>
       ))}
+      
       {users.length === 0 && (
-          <p className="p-10 text-center text-black">Список пуст</p>
+        <div className="flex flex-col items-center justify-center p-12 text-black">
+          <p className="text-sm">Список пуст</p>
+        </div>
       )}
     </div>
   );

@@ -7,14 +7,19 @@ export type UserCellProps = {
   id: string | number;
   name: string;
   avatar: AvatarProps;
+  avatarSize?: number; 
   onDelete?: (id: string | number) => void;
 };
 
-export function UserCell({ id, name, avatar, onDelete }: UserCellProps) {
+export function UserCell({ id, name, avatar, avatarSize = 12, onDelete }: UserCellProps) {
   return (
-    <div className="flex items-center justify-between py-1 px-2 transition-colors group">
+    <div className="flex items-center justify-between transition-colors group">
       <div className="flex items-center gap-3">
-        <UserAvatar avatar={avatar} size={10} variant="avatarOnly" />
+        <UserAvatar 
+          avatar={avatar} 
+          size={avatarSize} 
+          variant="avatarOnly" 
+        />
         <span className="text-black">{name}</span>
       </div>
 

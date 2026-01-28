@@ -15,11 +15,11 @@ interface UserListProps {
 
 export function UserList({ users, onDelete }: UserListProps) {
   return (
-    <div className="flex flex-col bg-white overflow-hidden">
+    <div className="flex flex-col overflow-hidden">
       {users.map((user) => (
         <div 
           key={user.id} 
-          className="relative px-4 py-2 last:after:hidden after:absolute after:bottom-0 after:left-4 after:right-4 after:h-[1px] after:bg-gray-100"
+          className="relative px-4 py-2 last:after:hidden after:absolute after:bottom-0 after:left-4 after:right-4 after:h-[1px] after:bg-gray/10"
         >
           <UserCell
             {...user}

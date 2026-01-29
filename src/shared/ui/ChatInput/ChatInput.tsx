@@ -10,14 +10,14 @@ const ChatInput = (props: Props) => {
         const textarea = textareaRef.current
         if(!textarea) return
         textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight - 2 + "px";
+        textarea.style.height = textarea.scrollHeight -2  + "px";
     }
   return (
-    <div className='bg-white px-2 py-3 rounded-[20px] w-2xs flex items-center justify-between gap-3'>
+    <div className='bg-amber-100 px-2 py-3 rounded-[20px] w-2xs flex items-end justify-between gap-3'>
         <textarea 
         rows={1} 
         onInput={handleInput}
-        className='bg-transparent w-full outline-none resize-none text-[16px] leading-[130%] max-h-[150px] overflow-y-auto' 
+        className='bg-transparent w-full outline-none resize-none text-[16px] leading-[130%] max-h-[150px] overflow-y-auto box-border' 
         placeholder='Message'
         ref={textareaRef}
         />

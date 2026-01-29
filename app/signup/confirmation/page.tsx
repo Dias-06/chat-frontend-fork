@@ -58,8 +58,6 @@ export function ConfirmationPageContent() {
     return () => clearInterval(interval);
   }, [timer]);
 
-  /* ================= handlers ================= */
-
   const handleResend = async () => {
     try {
       await sendLoginCode({
@@ -97,7 +95,7 @@ export function ConfirmationPageContent() {
           setIsHelpModalOpen(true);
         } else {
           setErrorText(
-            `Код введён неверно. Осталось ${MAX_ATTEMPTS - next} попытки.`
+            `Код введён неверно. Осталось ${MAX_ATTEMPTS - next} попытки.`,
           );
         }
         return next;

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { Props } from "./page.types";
@@ -14,11 +15,15 @@ import {
   checkNicknameUnique,
 } from "@/shared/api/messenger";
 
+import { useUserStore } from "@/entities/user/model/store";
+
 export default function AboutMePage() {
   const [formData, setFormData] = useState<Props>({
     name: "",
     username: "",
   });
+  const setUser = useUserStore((state) => state.setUser);
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [nicknameError, setNicknameError] = useState("");
@@ -30,21 +35,18 @@ export default function AboutMePage() {
 
     try {
       await checkNicknameUnique(formData.username);
-      await updateMessengerProfile(formData);
+      const userData = await updateMessengerProfile(formData);
+      setUser(userData);
 
       alert("Профиль успешно сохранён");
     } catch (err: any) {
-      if (err?.message?.includes("уже занят")) {
-        setNicknameError(err.message);
-      } else if (
-        err?.message?.toLowerCase().includes("unauthorized") ||
-        err?.message === "Не авторизован"
-      ) {
-        alert("Сессия истекла, войдите снова");
-        // можно редиректить на login
+      if (err?.status === 400 || err?.data?.nickname) {
+        setNicknameError("Этот никнейм уже занят или некорректен");
       } else {
-        alert(err?.message || "Ошибка при отправке формы");
+        alert("Ошибка при сохранении профиля");
       }
+    } finally {
+      setLoading(false);
     }
   };
 

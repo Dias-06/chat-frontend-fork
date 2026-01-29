@@ -1,21 +1,31 @@
-import { apiFetch } from "./client";
-
-export interface MessengerProfileProps {
+interface MessengerProfileProps {
   name: string;
   username: string;
 }
 
 export const updateMessengerProfile = async (data: MessengerProfileProps) => {
-  return apiFetch("/api/v1/auth/messenger/profile/", {
+  const response = await fetch("/api/auth/profile", {
     method: "POST",
-    body: JSON.stringify(data),
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(
+      {
+        first_name: data.name,
+        username: data.username,
+      }
+    ),
   });
-};
+
+  const result = await response.json();
+  if(!response.ok) throw {status: response.status, data: result}
+  return result;
+}
 
 export const checkNicknameUnique = async (nickname: string) => {
-  return apiFetch(
-    `/api/v1/auth/messenger/profile/unique_nickname_check/${encodeURIComponent(
+  const response = await fetch(`/api/auth/check-nickname/${encodeURIComponent(
       nickname
-    )}/`
-  );
-};
+  )}/`);
+  const result = await response.json();
+  if(!response.ok) throw { status: response.status, data: result }
+  return result;
+}
+  

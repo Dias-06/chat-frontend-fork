@@ -75,7 +75,29 @@
 .animate-blink {
   animation: blink 1s step-end infinite;
 }
+
 body {
   font-family: var(--font-sans);
 }
+.custom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+}
+.custom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  margin-top: -5px;
+}
+.custom-range::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  height: 4px;
+  background-color: #EEEEEE;
+  border-radius: 12px;
+}
+
 @import "tailwindcss";

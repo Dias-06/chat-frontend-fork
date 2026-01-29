@@ -112,6 +112,7 @@ export const ConfirmModal = ({
               <Button
                 key={index}
                 full
+                type="button"
                 size="lg"
                 variant={
                   buttonsLayout === "row"
